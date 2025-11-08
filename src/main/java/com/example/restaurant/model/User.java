@@ -1,4 +1,3 @@
-// src/main/java/com/example/georgianrestaurant/model/User.java
 package com.example.restaurant.model;
 
 import jakarta.persistence.*;

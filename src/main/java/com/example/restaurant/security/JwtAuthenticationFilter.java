@@ -1,7 +1,7 @@
 // src/main/java/com/example/georgianrestaurant/security/JwtAuthenticationFilter.java
 package com.example.restaurant.security;
 
-import com.example.georgianrestaurant.model.User;
+import com.example.restaurant.model.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

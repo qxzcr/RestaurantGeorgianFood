@@ -1,7 +1,7 @@
 // src/main/java/com/example/georgianrestaurant/ui/MainLayout.java
 package com.example.restaurant.ui;
 
-import com.example.georgianrestaurant.service.SecurityService;
+import com.example.restaurant.service.SecurityService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;

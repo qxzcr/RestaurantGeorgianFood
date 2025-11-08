@@ -1,10 +1,9 @@
-// src/main/java/com/example/georgianrestaurant/controller/AuthController.java
 package com.example.restaurant.controller;
 
-import com.example.georgianrestaurant.model.Role;
-import com.example.georgianrestaurant.model.User;
-import com.example.georgianrestaurant.security.JwtService;
-import com.example.georgianrestaurant.service.UserService;
+import com.example.restaurant.model.Role;
+import com.example.restaurant.model.User;
+import com.example.restaurant.security.JwtService;
+import com.example.restaurant.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

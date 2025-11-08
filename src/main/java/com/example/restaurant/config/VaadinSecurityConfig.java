@@ -1,7 +1,7 @@
 // src/main/java/com/example/georgianrestaurant/config/VaadinSecurityConfig.java
 package com.example.restaurant.config;
 
-import com.example.georgianrestaurant.ui.AuthView;
+import com.example.restaurant.ui.AuthView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

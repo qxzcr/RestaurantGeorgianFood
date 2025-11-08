@@ -1,9 +1,9 @@
 // src/main/java/com/example/georgianrestaurant/service/UserService.java
 package com.example.restaurant.service;
 
-import com.example.georgianrestaurant.model.Role;
-import com.example.georgianrestaurant.model.User;
-import com.example.georgianrestaurant.repository.UserRepository;
+import com.example.restaurant.model.Role;
+import com.example.restaurant.model.User;
+import com.example.restaurant.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 // src/main/java/com/example/georgianrestaurant/security/JwtService.java
 package com.example.restaurant.security;
 
-import com.example.georgianrestaurant.model.User;
+import com.example.restaurant.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

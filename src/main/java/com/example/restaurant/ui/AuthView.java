@@ -1,10 +1,10 @@
 // src/main/java/com/example/georgianrestaurant/ui/AuthView.java
 package com.example.restaurant.ui;
 
-import com.example.georgianrestaurant.model.Role;
-import com.example.georgianrestaurant.model.User;
-import com.example.georgianrestaurant.service.SecurityService;
-import com.example.georgianrestaurant.service.UserService;
+import com.example.restaurant.model.Role;
+import com.example.restaurant.model.User;
+import com.example.restaurant.service.SecurityService;
+import com.example.restaurant.service.UserService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;

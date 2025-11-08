@@ -1,7 +1,6 @@
-// src/main/java/com/example/georgianrestaurant/config/ApiSecurityConfig.java
 package com.example.restaurant.config;
 
-import com.example.georgianrestaurant.security.JwtAuthenticationFilter;
+import com.example.restaurant.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

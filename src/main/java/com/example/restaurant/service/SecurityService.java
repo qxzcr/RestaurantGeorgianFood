@@ -1,7 +1,6 @@
-// src/main/java/com/example/georgianrestaurant/service/SecurityService.java
 package com.example.restaurant.service;
 
-import com.example.georgianrestaurant.model.User;
+import com.example.restaurant.model.User;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServletRequest;
