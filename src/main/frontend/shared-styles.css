@@ -1,0 +1,134 @@
+
+/* Сброс и базовые настройки */
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background-color: #fff;
+    color: #222;
+}
+
+/* Навбар */
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-logo {
+    height: 50px;
+    width: auto;
+    border-radius: 8px;
+}
+
+.nav-contact {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+.nav-contact span {
+    display: block;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #c0392b;
+}
+
+/* Герой-секция */
+.hero {
+    background: url("/images/restaurant-bg.jpg") center/cover no-repeat;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+/* Кнопки */
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn-menu,
+.btn-book {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.btn-menu {
+    background-color: #fff;
+    color: #222;
+}
+
+.btn-menu:hover {
+    background-color: #f0f0f0;
+}
+
+.btn-book {
+    background-color: #c0392b;
+    color: white;
+}
+
+.btn-book:hover {
+    background-color: #e74c3c;
+}
