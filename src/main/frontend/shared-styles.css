@@ -1,79 +1,93 @@
+/* src/main/frontend/shared-styles.css */
 
-/* Сброс и базовые настройки */
+/* --- Import Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@400;500;600&display=swap');
+
+/* --- Анимации --- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Reset and base settings --- */
 html, body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', 'Segoe UI', sans-serif;
-    background-color: #fff;
-    color: #222;
+    background-color: #fdfdfa;
+    color: #3b3b3b;
 }
 
-/* Навбар */
+/* --- Navbar --- */
 .navbar {
-    background-color: #fff;
+    background-color: #f3e9d2;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     position: sticky;
     top: 0;
     z-index: 100;
 }
-
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 0.5rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+.nav-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: #5D4037;
+    margin: 0;
+    padding: 0;
+    margin-left: 1rem;
 }
-
-.nav-logo {
-    height: 50px;
-    width: auto;
-    border-radius: 8px;
-}
-
-.nav-contact {
-    font-size: 0.9rem;
-    color: #666;
-    line-height: 1.4;
-}
-
-.nav-contact span {
-    display: block;
-}
-
-.nav-links {
-    display: flex;
-    gap: 2rem;
-}
-
-.nav-link {
+.nav-container vaadin-tabs { background: transparent; }
+.nav-container vaadin-tab { margin: 0 0.5rem; }
+.nav-container vaadin-tab a {
     text-decoration: none;
-    color: #333;
+    color: #3b3b3b;
     font-weight: 500;
     transition: color 0.3s;
+    font-size: 1rem;
 }
-
-.nav-link:hover {
-    color: #c0392b;
+.nav-container vaadin-tab a:hover { color: #6d4c41; }
+.nav-container vaadin-tab[selected] a { color: #6d4c41; }
+.nav-container vaadin-tabs::part(indicator) { display: none; }
+.btn-login-logout {
+    margin-left: 1rem;
+    color: #5D4037;
+    font-weight: 600;
 }
+.btn-login-logout:hover { color: #8D6E63; }
 
-/* Герой-секция */
+/* --- Hero Section (Left Column) --- */
 .hero {
     background: url("/images/restaurant-bg.jpg") center/cover no-repeat;
-    height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 100%;
     position: relative;
-    text-align: center;
     color: white;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: inherit;
+    background-size: cover;
+    background-position: center;
+    clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
+    z-index: 1;
 }
 
 .hero::after {
@@ -81,54 +95,293 @@ html, body {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.45);
+    z-index: 1;
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
     max-width: 800px;
+    text-align: center;
+    padding: 2rem;
 }
-
 .hero-title {
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
     letter-spacing: 2px;
     margin-bottom: 2rem;
     text-transform: uppercase;
+    color: #f8f8f4;
+    animation: fadeInUp 1s ease-out 0.3s;
+    animation-fill-mode: backwards;
 }
-
-/* Кнопки */
 .hero-buttons {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.5rem;
+    animation: fadeInUp 1s ease-out 0.6s;
+    animation-fill-mode: backwards;
 }
-
-.btn-menu,
-.btn-book {
-    padding: 0.75rem 1.5rem;
-    border: none;
+.btn-menu, .btn-book {
+    padding: 1rem 2.5rem;
+    border: 2px solid transparent;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 600;
     transition: all 0.3s ease;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
-
 .btn-menu {
     background-color: #fff;
-    color: #222;
+    color: #5D4037;
+    border-color: #5D4037;
 }
-
 .btn-menu:hover {
     background-color: #f0f0f0;
+    color: #795548;
+    border-color: #795548;
 }
-
 .btn-book {
-    background-color: #c0392b;
+    background-color: #5D4037;
     color: white;
+    border-color: #5D4037;
+}
+.btn-book:hover {
+    background-color: #795548;
+    border-color: #795548;
 }
 
-.btn-book:hover {
-    background-color: #e74c3c;
+/* --- About Section (Right Column) — ПРОЗРАЧНАЯ, АНИМИРОВАННАЯ --- */
+.about-section {
+    height: 100%;
+    box-sizing: border-box;
+    padding: 3rem;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    overflow: visible;
+    background: transparent !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-welcome {
+    font-family: 'Poppins', sans-serif;
+    color: #bfa880;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeInRight 0.8s ease-out 0.2s forwards;
+}
+
+.about-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    opacity: 0;
+    animation: fadeInRight 0.8s ease-out 0.4s forwards;
+}
+
+.about-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    color: #f8f8f4;
+    line-height: 1.7;
+    max-width: 420px;
+    margin: 0 auto 2.5rem;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    opacity: 0;
+    animation: fadeInRight 0.8s ease-out 0.6s forwards;
+}
+
+.about-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: scaleIn 0.9s ease-out 0.8s forwards;
+}
+
+.about-caption {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    color: #bfa880;
+    margin-bottom: 2rem;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeInRight 0.8s ease-out 1s forwards;
+}
+
+.social-icons {
+    gap: 1.8rem;
+    opacity: 0;
+    animation: fadeInRight 0.8s ease-out 1.2s forwards;
+}
+
+.social-icons span {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.social-icons span:hover {
+    color: #bfa880;
+    transform: translateY(-3px);
+}
+
+/* --- Gallery Section --- */
+.gallery-section {
+    width: 100%;
+    padding: 4rem 0;
+    background-color: #fdfdfa;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.gallery-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: #5D4037;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+.gallery-grid {
+    display: grid;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    box-sizing: border-box;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+        "text1  photo1 photo1"
+        "photo2 photo2 photo3"
+        "text2  text2  photo3";
+}
+.gallery-item-2 { grid-area: photo1; height: 300px; }
+.gallery-item-3 { grid-area: photo2; height: 300px; }
+.gallery-item-5 { grid-area: photo3; height: 100%; }
+.gallery-item-1 { grid-area: text1; }
+.gallery-item-4 { grid-area: text2; }
+
+.gallery-grid > div {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    animation: fadeInUp 0.7s ease-out;
+    animation-fill-mode: backwards;
+}
+.gallery-item-1 { animation-delay: 0.1s; }
+.gallery-item-2 { animation-delay: 0.2s; }
+.gallery-item-3 { animation-delay: 0.3s; }
+.gallery-item-4 { animation-delay: 0.4s; }
+.gallery-item-5 { animation-delay: 0.5s; }
+
+.gallery-item-text {
+    background: #fff;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    box-sizing: border-box;
+}
+.gallery-item-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #5D4037;
+    margin: 0 0 0.5rem 0;
+}
+.gallery-item-text p {
+    font-family: 'Poppins', sans-serif;
+    color: #6d4c41;
+    margin: 0;
+    line-height: 1.6;
+}
+.gallery-item-photo {
+    padding: 0 !important;
+    background: #eee;
+}
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- Footer Section --- */
+.footer-section {
+    width: 100%;
+    background-color: #5D4037;
+    color: #f3e9d2;
+    padding: 4rem 0;
+    box-sizing: border-box;
+}
+.footer-columns {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+.footer-column {
+    flex-basis: 300px;
+    flex-grow: 1;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+}
+.footer-column h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+}
+.footer-column span, .footer-column p {
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #f3e9d2;
+}
+
+/* --- Адаптивность --- */
+@media (max-width: 992px) {
+    .hero::before {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .about-section {
+        padding: 2rem;
+    }
+    .about-title {
+        font-size: 2.2rem;
+    }
+    .hero-title {
+        font-size: 2.8rem;
+    }
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    .btn-menu, .btn-book {
+        width: 200px;
+    }
 }
