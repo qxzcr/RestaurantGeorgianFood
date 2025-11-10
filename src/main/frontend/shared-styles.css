@@ -16,6 +16,16 @@
     from { opacity: 0; transform: translateX(40px); }
     to { opacity: 1; transform: translateX(0); }
 }
+@keyframes slideInFromBottom {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 /* --- Reset and base settings --- */
 html, body {
@@ -28,7 +38,7 @@ html, body {
 
 /* --- Navbar --- */
 .navbar {
-    background-color: #f3e9d2;
+    background-color: #f3e9d2; /* Beige */
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     position: sticky;
     top: 0;
@@ -53,22 +63,27 @@ html, body {
 }
 .nav-container vaadin-tabs { background: transparent; }
 .nav-container vaadin-tab { margin: 0 0.5rem; }
+/* src/main/frontend/shared-styles.css */
+
 .nav-container vaadin-tab a {
     text-decoration: none;
-    color: #3b3b3b;
-    font-weight: 500;
+    /* (ВОТ ИЗМЕНЕНИЕ!) Сделай цвет коричневым */
+    color: #5D4037;
+    font-weight: 600; /* И жирнее, чтобы сочеталось */
     transition: color 0.3s;
-    font-size: 1rem;
+    font-size: 1rem; /* <-- Можешь изменить и размер шрифта здесь */
 }
-.nav-container vaadin-tab a:hover { color: #6d4c41; }
-.nav-container vaadin-tab[selected] a { color: #6d4c41; }
+.nav-container vaadin-tab a:hover { color: #3b3b3b; } /* При наведении - темный */
+.nav-container vaadin-tab[selected] a { color: #3b3b3b; }
 .nav-container vaadin-tabs::part(indicator) { display: none; }
+
 .btn-login-logout {
     margin-left: 1rem;
     color: #5D4037;
     font-weight: 600;
 }
 .btn-login-logout:hover { color: #8D6E63; }
+
 
 /* --- Hero Section (Left Column) --- */
 .hero {
@@ -77,6 +92,8 @@ html, body {
     position: relative;
     color: white;
     overflow: hidden;
+    z-index: 2;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%); /* Наклонная линия */
 }
 
 .hero::before {
@@ -86,7 +103,6 @@ html, body {
     background: inherit;
     background-size: cover;
     background-position: center;
-    clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
     z-index: 1;
 }
 
@@ -96,6 +112,7 @@ html, body {
     inset: 0;
     background: rgba(0, 0, 0, 0.45);
     z-index: 1;
+    clip-path: inherit;
 }
 
 .hero-content {
@@ -107,7 +124,8 @@ html, body {
 }
 .hero-title {
     font-family: 'Playfair Display', serif;
-    font-size: 3.5rem;
+    /* (ВОТ ИЗМЕНЕНИЕ!) Сделал шрифт чуть меньше, чтобы он "опустился" */
+    font-size: 2.8rem;
     font-weight: 700;
     letter-spacing: 2px;
     margin-bottom: 2rem;
@@ -123,6 +141,7 @@ html, body {
     animation: fadeInUp 1s ease-out 0.6s;
     animation-fill-mode: backwards;
 }
+/* (Стили для "красивых" кнопок) */
 .btn-menu, .btn-book {
     padding: 1rem 2.5rem;
     border: 2px solid transparent;
@@ -154,16 +173,15 @@ html, body {
     border-color: #795548;
 }
 
-/* --- About Section (Right Column) — ПРОЗРАЧНАЯ, АНИМИРОВАННАЯ --- */
+/* --- About Section (Right Column) --- */
 .about-section {
     height: 100%;
     box-sizing: border-box;
-    padding: 3rem;
+    padding: 3rem !important;
     text-align: center;
     position: relative;
-    z-index: 2;
-    overflow: visible;
-    background: transparent !important;
+    z-index: 3;
+    background: #ffffff !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -172,7 +190,8 @@ html, body {
 
 .about-welcome {
     font-family: 'Poppins', sans-serif;
-    color: #bfa880;
+    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал коричневым */
+    color: #5D4037;
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -185,9 +204,10 @@ html, body {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     font-size: 2.8rem;
-    color: #ffffff;
+    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал коричневым */
+    color: #5D4037;
     margin-bottom: 1rem;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    text-shadow: none;
     opacity: 0;
     animation: fadeInRight 0.8s ease-out 0.4s forwards;
 }
@@ -195,11 +215,12 @@ html, body {
 .about-text {
     font-family: 'Poppins', sans-serif;
     font-size: 1.1rem;
-    color: #f8f8f4;
+    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал читаемым (коричнево-серым) */
+    color: #6d4c41;
     line-height: 1.7;
     max-width: 420px;
     margin: 0 auto 2.5rem;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    text-shadow: none;
     opacity: 0;
     animation: fadeInRight 0.8s ease-out 0.6s forwards;
 }
@@ -209,8 +230,8 @@ html, body {
     height: 200px;
     border-radius: 50%;
     object-fit: cover;
-    border: 5px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border: 5px solid #f0f0f0;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     margin-bottom: 1.5rem;
     opacity: 0;
     animation: scaleIn 0.9s ease-out 0.8s forwards;
@@ -219,7 +240,8 @@ html, body {
 .about-caption {
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
-    color: #bfa880;
+    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал читаемым (коричнево-серым) */
+    color: #6d4c41;
     margin-bottom: 2rem;
     font-style: italic;
     opacity: 0;
@@ -236,10 +258,11 @@ html, body {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     font-size: 1.4rem;
-    color: #ffffff;
+    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал коричневым */
+    color: #5D4037;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    text-shadow: none;
 }
 
 .social-icons span:hover {
@@ -286,7 +309,7 @@ html, body {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    animation: fadeInUp 0.7s ease-out;
+    animation: slideInFromBottom 0.7s ease-out;
     animation-fill-mode: backwards;
 }
 .gallery-item-1 { animation-delay: 0.1s; }
@@ -363,9 +386,9 @@ html, body {
     color: #f3e9d2;
 }
 
-/* --- Адаптивность --- */
+/* --- Адаптивность (Убрал ::before, т.к. он мешал) --- */
 @media (max-width: 992px) {
-    .hero::before {
+    .hero {
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     }
     .about-section {

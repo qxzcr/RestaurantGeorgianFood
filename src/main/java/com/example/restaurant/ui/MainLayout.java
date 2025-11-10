@@ -4,11 +4,11 @@ package com.example.restaurant.ui;
 import com.example.restaurant.service.SecurityService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.applayout.DrawerToggle;
+// import com.vaadin.flow.component.applayout.DrawerToggle; // <-- (ИЗМЕНЕНИЕ!) Убрали импорт
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.H1; // <-- (ИЗМЕНЕНИЕ!)
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -26,15 +26,12 @@ public class MainLayout extends AppLayout {
     }
 
     private void createHeader() {
-        // (ВОТ ИЗМЕНЕНИЕ!)
-        // Убрали Image, добавили H1 для "Kinto"
         H1 logoTitle = new H1("Kinto");
         logoTitle.addClassName("nav-title");
 
         // --- LEFT SIDE ---
         HorizontalLayout leftSide = new HorizontalLayout(
-                new DrawerToggle(),
-                logoTitle // Добавили текст "Kinto"
+                logoTitle
         );
         leftSide.setAlignItems(FlexComponent.Alignment.CENTER);
 
@@ -45,7 +42,6 @@ public class MainLayout extends AppLayout {
         HorizontalLayout rightSide = new HorizontalLayout(
                 navTabs,
                 loginLogoutButton
-                // Убрали логотип отсюда
         );
         rightSide.setAlignItems(FlexComponent.Alignment.CENTER);
         rightSide.setSpacing(true);
