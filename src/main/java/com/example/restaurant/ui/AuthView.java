@@ -1,4 +1,4 @@
-// src/main/java/com/example/georgianrestaurant/ui/AuthView.java
+// src/main/java/com/example/restaurant/ui/AuthView.java
 package com.example.restaurant.ui;
 
 import com.example.restaurant.model.Role;
@@ -6,175 +6,197 @@ import com.example.restaurant.model.User;
 import com.example.restaurant.service.SecurityService;
 import com.example.restaurant.service.UserService;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinServletRequest;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.vaadin.flow.component.UI;
 
-@Route("login")
-@PageTitle("Sign In | GOBI")
-@AnonymousAllowed // Доступно всем (анонимным пользователям)
+@Route("auth")
+@PageTitle("Sign In / Sign Up | Kinto")
+@AnonymousAllowed
 public class AuthView extends VerticalLayout implements BeforeEnterObserver {
 
-    // Внедряем наши сервисы напрямую
     private final SecurityService securityService;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    private VerticalLayout loginForm;
-    private VerticalLayout registerForm;
+    private Div loginForm;
+    private Div registerForm;
 
     public AuthView(SecurityService securityService, UserService userService, PasswordEncoder passwordEncoder) {
         this.securityService = securityService;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
 
+        addClassName("auth-view");
         setSizeFull();
-        setAlignItems(Alignment.CENTER);
-        setJustifyContentMode(JustifyContentMode.CENTER);
-        addClassName("auth-view"); // Можно добавить стили в CSS
+        setAlignItems(FlexComponent.Alignment.CENTER);
+        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
         loginForm = createLoginForm();
         registerForm = createRegisterForm();
-        registerForm.setVisible(false); // Сначала прячем форму регистрации
+        registerForm.setVisible(false);
 
-        add(loginForm, registerForm);
+        Div container = new Div(loginForm, registerForm);
+        container.addClassName("auth-container");
+
+        add(container);
     }
 
-    // --- ФОРМА ЛОГИНА ---
-    private VerticalLayout createLoginForm() {
-        H2 title = new H2("Sign In");
+    private Div createLoginForm() {
+        Div form = new Div();
+        form.addClassName("auth-form");
+
+        H1 title = new H1("Welcome Back");
+        title.addClassName("auth-title");
+
+        H2 subtitle = new H2("Sign in to book a table");
+        subtitle.addClassName("auth-subtitle");
 
         EmailField email = new EmailField("Email");
-        email.setRequired(true);
-        email.setErrorMessage("Please enter your email");
+        email.setPlaceholder("your@email.com");
+        email.setWidthFull();
+        email.addClassName("auth-input");
 
         PasswordField password = new PasswordField("Password");
-        password.setRequired(true);
+        password.setPlaceholder("••••••••");
+        password.setWidthFull();
+        password.addClassName("auth-input");
 
         Button loginBtn = new Button("Sign In", e -> login(email.getValue(), password.getValue()));
-        loginBtn.addClassName("primary"); // (для стилей Vaadin)
+        loginBtn.addClassName("auth-btn");
+        loginBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        Button toRegister = new Button("Create Account", e -> showRegisterForm(true));
-        toRegister.addClassName("link"); // (для стилей Vaadin)
+        Button toRegister = new Button("Create an account", e -> showForm(false));
+        toRegister.addClassName("auth-link");
+        toRegister.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        VerticalLayout form = new VerticalLayout(title, email, password, loginBtn, toRegister);
-        form.setAlignItems(Alignment.STRETCH);
-        form.setPadding(true);
+        form.add(title, subtitle, email, password, loginBtn, toRegister);
         return form;
     }
 
-    // --- ФОРМА РЕГИСТРАЦИИ ---
-    private VerticalLayout createRegisterForm() {
-        H2 title = new H2("Sign Up");
+    private Div createRegisterForm() {
+        Div form = new Div();
+        form.addClassName("auth-form");
+
+        H1 title = new H1("Join Kinto");
+        title.addClassName("auth-title");
+
+        H2 subtitle = new H2("Create your account");
+        subtitle.addClassName("auth-subtitle");
 
         EmailField email = new EmailField("Email");
-        email.setRequired(true);
-
-        PasswordField password = new PasswordField("Password");
-        password.setRequired(true);
+        email.setPlaceholder("your@email.com");
+        email.setWidthFull();
+        email.addClassName("auth-input");
 
         TextField fullName = new TextField("Full Name");
-        fullName.setRequired(true);
+        fullName.setPlaceholder("John Doe");
+        fullName.setWidthFull();
+        fullName.addClassName("auth-input");
 
-        TextField phone = new TextField("Phone"); // (Опционально)
+        TextField phone = new TextField("Phone");
+        phone.setPlaceholder("+48 123 456 789");
+        phone.setWidthFull();
+        phone.addClassName("auth-input");
 
-        Button regBtn = new Button("Register", e -> register(
-                email.getValue(),
-                password.getValue(),
-                fullName.getValue(),
-                phone.getValue()
+        PasswordField password = new PasswordField("Password");
+        password.setPlaceholder("••••••••");
+        password.setWidthFull();
+        password.addClassName("auth-input");
+
+        PasswordField confirmPassword = new PasswordField("Confirm Password");
+        confirmPassword.setPlaceholder("••••••••");
+        confirmPassword.setWidthFull();
+        confirmPassword.addClassName("auth-input");
+
+        Button registerBtn = new Button("Create Account", e -> register(
+                email.getValue(), password.getValue(), confirmPassword.getValue(),
+                fullName.getValue(), phone.getValue()
         ));
-        regBtn.addClassName("primary");
+        registerBtn.addClassName("auth-btn");
+        registerBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        Button backBtn = new Button("Back to Sign In", e -> showRegisterForm(false));
-        backBtn.addClassName("secondary");
+        Button backBtn = new Button("Already have an account? Sign in", e -> showForm(true));
+        backBtn.addClassName("auth-link");
+        backBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        VerticalLayout form = new VerticalLayout(title, email, password, fullName, phone, regBtn, backBtn);
-        form.setAlignItems(Alignment.STRETCH);
-        form.setPadding(true);
+        form.add(title, subtitle, email, fullName, phone, password, confirmPassword, registerBtn, backBtn);
         return form;
     }
 
-    // --- ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ФОРМ ---
-    private void showRegisterForm(boolean show) {
-        loginForm.setVisible(!show);
-        registerForm.setVisible(show);
+    private void showForm(boolean showLogin) {
+        loginForm.setVisible(showLogin);
+        registerForm.setVisible(!showLogin);
     }
 
-    // --- ЛОГИКА ЛОГИНА ---
     private void login(String email, String password) {
-        if (email.isEmpty() || password.isEmpty()) {
-            Notification.show("Please fill in all fields!", 3000, Notification.Position.MIDDLE);
+        if (email.isBlank() || password.isBlank()) {
+            showError("Please fill in all fields");
             return;
         }
 
         try {
-            // (ВОТ ГДЕ МАГИЯ!)
-            // Вызываем наш SecurityService
-            securityService.login(email, password, (VaadinServletRequest) VaadinServletRequest.getCurrent());
-
-            // Переадресация на главную произойдет ВНУТРИ service.login()
-
+            securityService.login(email, password, VaadinServletRequest.getCurrent());
+            UI.getCurrent().navigate("");
         } catch (Exception ex) {
-            // Если authenticationManager.authenticate() не прошел, будет исключение
-            Notification.show("Login failed. Check email or password.", 3000, Notification.Position.MIDDLE);
+            showError("Invalid email or password");
         }
     }
 
-    // --- ЛОГИКА РЕГИСТРАЦИИ ---
-    private void register(String email, String password, String fullName, String phone) {
-        if (email.isEmpty() || password.isEmpty() || fullName.isEmpty()) {
-            Notification.show("Email, Password, and Full Name are required.", 3000, Notification.Position.MIDDLE);
+    private void register(String email, String password, String confirmPassword,
+                          String fullName, String phone) {
+        if (!password.equals(confirmPassword)) {
+            showError("Passwords do not match");
+            return;
+        }
+        if (email.isBlank() || password.isBlank() || fullName.isBlank()) {
+            showError("Email, password, and full name are required");
             return;
         }
 
-        try {
-            // 1. Проверяем, не занят ли email (через UserService)
-            if (userService.findByEmail(email) != null) {
-                Notification.show("This email is already taken.", 3000, Notification.Position.MIDDLE);
-                return;
-            }
-
-            // 2. Создаем нового пользователя
-            User user = User.builder()
-                    .email(email)
-                    .password(passwordEncoder.encode(password)) // (ВОТ ГДЕ МАГИЯ!) Хешируем пароль!
-                    .fullName(fullName)
-                    .phone(phone)
-                    .role(Role.CUSTOMER) // По умолчанию все - CUSTOMER
-                    .build();
-
-            // 3. Регистрируем через UserService (который вызывает save)
-            userService.register(user);
-
-            Notification.show("Account created! Please sign in.", 3000, Notification.Position.TOP_CENTER);
-            showRegisterForm(false); // Показываем форму логина
-
-        } catch (Exception ex) {
-            Notification.show("Registration failed: " + ex.getMessage(), 3000, Notification.Position.MIDDLE);
+        if (userService.findByEmail(email) != null) {
+            showError("Email already exists");
+            return;
         }
+
+        User user = User.builder()
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .fullName(fullName)
+                .phone(phone)
+                .role(Role.CUSTOMER)
+                .build();
+
+        userService.register(user);
+        showSuccess("Account created! Please sign in.");
+        showForm(true);
     }
 
-    /**
-     * Этот метод вызывается ПЕРЕД тем, как страница откроется.
-     * Он не пустит залогиненного пользователя на страницу /login.
-     */
+    private void showError(String message) {
+        Notification n = Notification.show(message, 3000, Notification.Position.TOP_CENTER);
+        n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+    }
+
+    private void showSuccess(String message) {
+        Notification n = Notification.show(message, 3000, Notification.Position.TOP_CENTER);
+        n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+    }
+
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        // Если пользователь УЖЕ залогинен...
         if (securityService.getAuthenticatedUser() != null) {
-            // ...перенаправляем его на главную страницу
-            event.forwardTo(""); // "" - это твой роут для HomeView
+            event.forwardTo("");
         }
     }
 }

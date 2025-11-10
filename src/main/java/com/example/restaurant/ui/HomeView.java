@@ -83,7 +83,8 @@ public class HomeView extends VerticalLayout {
     }
 
     private VerticalLayout createAboutSection() {
-        Span welcome = new Span("Experience True Khachapuri");
+        // (ВОТ ИСПРАВЛЕНИЕ!) Текст "Welcome" был неправильный
+        Span welcome = new Span("Welcome");
         welcome.addClassName("about-welcome");
 
         H2 title = new H2("Experience True Khachapuri");

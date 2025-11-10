@@ -67,13 +67,12 @@ html, body {
 
 .nav-container vaadin-tab a {
     text-decoration: none;
-    /* (ВОТ ИЗМЕНЕНИЕ!) Сделай цвет коричневым */
     color: #5D4037;
-    font-weight: 600; /* И жирнее, чтобы сочеталось */
+    font-weight: 600;
     transition: color 0.3s;
-    font-size: 1rem; /* <-- Можешь изменить и размер шрифта здесь */
+    font-size: 1rem;
 }
-.nav-container vaadin-tab a:hover { color: #3b3b3b; } /* При наведении - темный */
+.nav-container vaadin-tab a:hover { color: #3b3b3b; }
 .nav-container vaadin-tab[selected] a { color: #3b3b3b; }
 .nav-container vaadin-tabs::part(indicator) { display: none; }
 
@@ -124,7 +123,6 @@ html, body {
 }
 .hero-title {
     font-family: 'Playfair Display', serif;
-    /* (ВОТ ИЗМЕНЕНИЕ!) Сделал шрифт чуть меньше, чтобы он "опустился" */
     font-size: 2.8rem;
     font-weight: 700;
     letter-spacing: 2px;
@@ -141,7 +139,6 @@ html, body {
     animation: fadeInUp 1s ease-out 0.6s;
     animation-fill-mode: backwards;
 }
-/* (Стили для "красивых" кнопок) */
 .btn-menu, .btn-book {
     padding: 1rem 2.5rem;
     border: 2px solid transparent;
@@ -190,7 +187,6 @@ html, body {
 
 .about-welcome {
     font-family: 'Poppins', sans-serif;
-    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал коричневым */
     color: #5D4037;
     font-size: 0.9rem;
     text-transform: uppercase;
@@ -204,7 +200,6 @@ html, body {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     font-size: 2.8rem;
-    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал коричневым */
     color: #5D4037;
     margin-bottom: 1rem;
     text-shadow: none;
@@ -215,7 +210,6 @@ html, body {
 .about-text {
     font-family: 'Poppins', sans-serif;
     font-size: 1.1rem;
-    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал читаемым (коричнево-серым) */
     color: #6d4c41;
     line-height: 1.7;
     max-width: 420px;
@@ -240,7 +234,6 @@ html, body {
 .about-caption {
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
-    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал читаемым (коричнево-серым) */
     color: #6d4c41;
     margin-bottom: 2rem;
     font-style: italic;
@@ -258,7 +251,6 @@ html, body {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     font-size: 1.4rem;
-    /* (ВОТ ИЗМЕНЕНИЕ!) Цвет стал коричневым */
     color: #5D4037;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -406,5 +398,422 @@ html, body {
     }
     .btn-menu, .btn-book {
         width: 200px;
+    }
+}
+
+.auth-view {
+    background-image:
+            linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+            url("static/images/restaurant-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    min-height: 100vh;
+}
+
+
+.auth-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px; /* Фиксированная ширина для формы */
+    overflow: hidden; /* Скрывает формы при переключении */
+
+    /* Анимация появления */
+    animation: scaleIn 0.5s ease-out;
+}
+
+.auth-form {
+    padding: 2.5rem 3rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Расстояние между полями */
+}
+
+.auth-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #5D4037; /* Коричневый */
+    margin: 0;
+    text-align: center;
+}
+
+.auth-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #6d4c41; /* Светло-коричневый */
+    margin: -1rem 0 0.5rem 0; /* Прижимаем к заголовку */
+    text-align: center;
+}
+
+/* Стилизация полей ввода Vaadin */
+.auth-input {
+    width: 100%;
+}
+.auth-input::part(label) {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #5D4037;
+    font-size: 0.9rem;
+}
+.auth-input::part(input-field) {
+    background-color: #fdfdfa; /* Очень светло-бежевый */
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+.auth-input::part(input-field):focus-within {
+    border-color: #5D4037;
+    box-shadow: 0 0 0 2px rgba(93, 64, 55, 0.1);
+}
+
+/* Стилизация главной кнопки */
+.auth-btn {
+    width: 100%;
+    /* Используем переменные Vaadin Lumo для темизации */
+    --lumo-primary-color: #5D4037; /* Коричневый фон */
+    --lumo-primary-text-color: #ffffff; /* Белый текст */
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+.auth-btn:hover {
+    --lumo-primary-color: #795548; /* Коричневый посветлее */
+}
+
+/* Стилизация кнопки-ссылки */
+.auth-link {
+    width: 100%;
+    text-align: center;
+    --lumo-tertiary-text-color: #6d4c41; /* Коричневый */
+    font-size: 0.9rem;
+}
+.auth-link:hover {
+    --lumo-tertiary-text-color: #3b3b3b;
+}
+/* src/main/frontend/shared-styles.css */
+
+/* ... (все твои существующие стили .hero, .about-section, .gallery-grid... остаются здесь) ... */
+
+/* ... (все твои существующие стили .hero, .about-section, .gallery-grid... остаются здесь) ... */
+
+
+/* ===============================================
+    (НОВЫЕ СТИЛИ!) ДЛЯ СТРАНИЦЫ ШЕФА (ChefView)
+===============================================
+*/
+.chef-view {
+    background: #ffffff;
+    padding: 3rem;
+    box-sizing: border-box;
+}
+.chef-container {
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    gap: 3rem;
+    align-items: center;
+}
+.chef-image-container {
+    flex: 1;
+    min-width: 300px;
+}
+.chef-image {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.chef-info {
+    flex: 1.5;
+}
+.chef-info h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    color: #5D4037;
+    margin: 0 0 0.5rem 0;
+}
+.chef-info .chef-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: #bfa880;
+    margin-top: -1rem;
+    margin-bottom: 1.5rem;
+}
+.chef-info p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #6d4c41;
+}
+
+/* (НОВОЕ!) Галерея шефа */
+.chef-gallery-section {
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 4rem; /* Отступ от секции о шефе */
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden; /* Для анимации */
+}
+.chef-gallery-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: #5D4037;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.chef-gallery-grid {
+    width: 100%;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap; /* Перенос на моб. */
+}
+.chef-gallery-item {
+    width: 300px; /* Фиксированный размер фото */
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    animation: slideInFromBottom 0.7s ease-out;
+    animation-fill-mode: backwards;
+}
+/* Анимация поочередно */
+.chef-gallery-item:nth-child(1) { animation-delay: 0.1s; }
+.chef-gallery-item:nth-child(2) { animation-delay: 0.2s; }
+.chef-gallery-item:nth-child(3) { animation-delay: 0.3s; }
+
+.chef-gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.chef-gallery-item:hover .chef-gallery-image {
+    transform: scale(1.1); /* Красивый зум при наведении */
+}
+
+
+/* ===============================================
+    (НОВЫЕ СТИЛИ!) ДЛЯ СТРАНИЦЫ МЕНЮ (MenuView)
+===============================================
+*/
+.menu-view {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    box-sizing: border-box;
+    align-items: center;
+}
+.menu-view h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: #5D4037;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* (НОВОЕ!) Стили для фильтров */
+.menu-filters {
+    background-color: #f3e9d2; /* Бежевый фон */
+    border-radius: 50px; /* Закругленная форма как на фото */
+    padding: 0.5rem;
+    margin-bottom: 3rem;
+}
+.menu-filters vaadin-tab {
+    color: #5D4037; /* Коричневый текст */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+/* "Таблетка" для выбранной вкладки */
+.menu-filters vaadin-tab[selected] {
+    background-color: #ffffff; /* Белый фон */
+    color: #3b3b3b; /* Темный текст */
+    border-radius: 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.menu-filters vaadin-tabs::part(indicator) {
+    display: none; /* Убираем стандартный индикатор */
+}
+
+/* (НОВОЕ!) Сетка для карточек блюд */
+.menu-grid {
+    display: grid;
+    width: 100%;
+    /* 2 колонки на ПК, 1 на мобильных */
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+/* (НОВОЕ!) Стили для карточки блюда */
+.dish-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    overflow: hidden; /* Обрезаем картинку по рамке */
+    animation: scaleIn 0.5s ease-out; /* Анимация появления */
+}
+.dish-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+}
+.dish-card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.dish-card-content {
+    padding: 1.5rem;
+}
+.dish-card-header {
+    align-items: baseline;
+    gap: 1rem;
+}
+.dish-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: #5D4037;
+    margin: 0;
+}
+.dish-card-price {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #3b3b3b;
+    margin-left: auto;
+    white-space: nowrap;
+}
+.dish-card-description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    color: #6d4c41;
+    line-height: 1.6;
+    margin-top: 0.5rem;
+}
+
+/* Адаптивность для карточек меню */
+@media (max-width: 992px) {
+    /* ... (твой .hero, .about-section @media... остается здесь) ... */
+
+    .chef-container {
+        flex-direction: column;
+    }
+    .menu-grid {
+        grid-template-columns: 1fr; /* 1 колонка на мобильных */
+    }
+}
+/* ... (все твои существующие стили .hero, .about-section, .gallery-grid... остаются здесь) ... */
+
+
+/* ===============================================
+    (НОВЫЕ СТИЛИ!) ДЛЯ СТРАНИЦЫ 'ABOUT'
+===============================================
+*/
+.about-view {
+    background: #ffffff;
+    padding: 3rem;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center; /* Центрируем .about-container */
+    min-height: calc(100vh - 80px); /* 100% высоты минус навбар */
+}
+.about-container {
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    gap: 3rem;
+    align-items: center;
+}
+.about-info {
+    flex: 1.5; /* Больше места для текста */
+}
+.about-info h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    color: #5D4037;
+    margin: 0 0 1.5rem 0;
+}
+.about-info p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #6d4c41;
+    margin-bottom: 1rem;
+}
+.about-image-container {
+    flex: 1;
+    min-width: 300px;
+}
+.about-image-style {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* ===============================================
+    (НОВЫЕ СТИЛИ!) ДЛЯ СТРАНИЦЫ 'RESERVATIONS'
+===============================================
+*/
+.reservation-view {
+    width: 100%;
+    max-width: 800px; /* Делаем форму не слишком широкой */
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    box-sizing: border-box;
+    background: #ffffff;
+    min-height: calc(100vh - 80px); /* 100% высоты минус навбар */
+}
+.reservation-view h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: #5D4037;
+}
+.reservation-intro {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    color: #6d4c41;
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+.reservation-form {
+    width: 100%;
+    background: #fdfdfa; /* Светло-бежевый */
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+/* Стилизуем все поля Vaadin внутри формы */
+.reservation-form > * {
+    --lumo-primary-color: #5D4037; /* Коричневый цвет для фокуса */
+}
+.reservation-form vaadin-date-picker,
+.reservation-form vaadin-time-picker,
+.reservation-form vaadin-integer-field,
+.reservation-form vaadin-text-field {
+    width: 100%;
+}
+
+/* Адаптивность для 'About' */
+@media (max-width: 992px) {
+    /* ... (твой .hero, .about-section @media... остается здесь) ... */
+
+    .about-container {
+        flex-direction: column; /* Текст над картинкой */
     }
 }

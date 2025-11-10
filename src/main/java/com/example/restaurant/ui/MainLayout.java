@@ -80,15 +80,19 @@ public class MainLayout extends AppLayout {
         return tab;
     }
 
+    // В createLoginLogoutButton()
     private Button createLoginLogoutButton() {
-        Button button;
-        if (securityService.getAuthenticatedUser() != null) {
-            button = new Button("Sign Out", e -> securityService.logout());
-        } else {
-            button = new Button("Sign In", e -> UI.getCurrent().navigate("login"));
-        }
+        Button button = new Button();
         button.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         button.addClassName("btn-login-logout");
+
+        if (securityService.getAuthenticatedUser() != null) {
+            button.setText("Sign Out");
+            button.addClickListener(e -> securityService.logout());
+        } else {
+            button.setText("Sign In");
+            button.addClickListener(e -> UI.getCurrent().navigate("auth"));
+        }
         return button;
     }
 }
