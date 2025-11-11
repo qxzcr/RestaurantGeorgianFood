@@ -556,11 +556,11 @@ html, body {
     color: #6d4c41;
 }
 
-/* (НОВОЕ!) Галерея шефа */
+/* (ИЗМЕНЕНИЕ!) Галерея шефа */
 .chef-gallery-section {
     width: 100%;
     max-width: 1200px;
-    margin-top: 4rem; /* Отступ от секции о шефе */
+    margin: 4rem auto 0 auto; /* Добавил 'auto' для центрирования */
     padding: 0;
     box-sizing: border-box;
     overflow: hidden; /* Для анимации */
@@ -573,25 +573,46 @@ html, body {
     margin-bottom: 2rem;
 }
 .chef-gallery-grid {
-    width: 100%;
-    display: flex;
+    /* (ИЗМЕНЕНИЕ!) Используем Grid вместо Flex */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 колонки */
+    grid-template-rows: 250px 250px; /* 2 ряда */
     gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap; /* Перенос на моб. */
+    width: 100%;
+
+    /* Этот макет сделает 1-е фото высоким (tall),
+      а 2-е и 3-е будут рядом с ним
+    */
+    grid-template-areas:
+        "tall photo-2"
+        "tall photo-3";
 }
+
 .chef-gallery-item {
-    width: 300px; /* Фиксированный размер фото */
-    height: 300px;
+    /* (ИЗМЕНЕНИЕ!) Убрали фикс. ширину/высоту, сетка решает */
+    width: 100%;
+    height: 100%;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     animation: slideInFromBottom 0.7s ease-out;
     animation-fill-mode: backwards;
 }
-/* Анимация поочередно */
-.chef-gallery-item:nth-child(1) { animation-delay: 0.1s; }
-.chef-gallery-item:nth-child(2) { animation-delay: 0.2s; }
-.chef-gallery-item:nth-child(3) { animation-delay: 0.3s; }
+
+/* (НОВОЕ!) Расставляем фото по сетке */
+.chef-gallery-item:nth-child(1) {
+    grid-area: tall;
+    animation-delay: 0.1s;
+}
+.chef-gallery-item:nth-child(2) {
+    grid-area: photo-2;
+    animation-delay: 0.2s;
+}
+.chef-gallery-item:nth-child(3) {
+    grid-area: photo-3;
+    animation-delay: 0.3s;
+}
+
 
 .chef-gallery-image {
     width: 100%;
@@ -816,4 +837,57 @@ html, body {
     .about-container {
         flex-direction: column; /* Текст над картинкой */
     }
+}
+
+                       /* ===============================================
+                           (НОВЫЕ СТИЛИ!) ДЛЯ АДМИН ПАНЕЛИ (AdminView)
+                       ===============================================
+                       */
+                   .admin-view {
+                       width: 100%;
+                       max-width: 1200px;
+                       margin: 0 auto;
+                       padding: 2rem;
+                       box-sizing: border-box;
+                   }
+.admin-view h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: #5D4037;
+    text-align: center;
+}
+.admin-tabs {
+    margin-bottom: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 0.5rem;
+}
+.admin-tabs vaadin-tab {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #6d4c41;
+}
+.admin-tabs vaadin-tab[selected] {
+    color: #5D4037;
+}
+.admin-tabs::part(indicator) {
+    background-color: #5D4037;
+    height: 3px;
+}
+.admin-content {
+    width: 100%;
+}
+.admin-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #5D4037;
+    border-bottom: 2px solid #f3e9d2;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+.admin-grid {
+    height: 400px; /* Ограничиваем высоту грида */
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
 }

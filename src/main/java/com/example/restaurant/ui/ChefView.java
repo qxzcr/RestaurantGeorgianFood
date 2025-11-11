@@ -21,7 +21,7 @@ public class ChefView extends VerticalLayout {
         addClassName("chef-view");
         setPadding(false);
         setSpacing(false);
-        setSizeFull();
+        setWidthFull();
 
         // --- Верхняя секция (Инфо о шефе) ---
         Div container = new Div();
@@ -74,11 +74,10 @@ public class ChefView extends VerticalLayout {
         HorizontalLayout grid = new HorizontalLayout();
         grid.addClassName("chef-gallery-grid");
 
-        // (ПРИМЕЧАНИЕ: Добавь эти фото в 'static/images/chef/')
         grid.add(
-                createGalleryItem("/images/chef/chef1.jpg", "Giorgi cooking"),
-                createGalleryItem("/images/chef/chef2.jpg", "Giorgi plating"),
-                createGalleryItem("/static/images/chef/chef3.jpg", "Giorgi with his team")
+                createGalleryItem("/images/chef1.jpg", "Giorgi cooking"),
+                createGalleryItem("/images/chef2.jpg", "Giorgi plating"),
+                createGalleryItem("/images/chef3.jpg", "Giorgi with his team")
         );
 
         section.add(title, grid);

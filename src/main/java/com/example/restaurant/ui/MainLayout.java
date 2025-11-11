@@ -1,10 +1,11 @@
 // src/main/java/com/example/restaurant/ui/MainLayout.java
 package com.example.restaurant.ui;
 
+import com.example.restaurant.model.Role;
+import com.example.restaurant.model.User; // <-- (НОВЫЙ ИМПОРТ)
 import com.example.restaurant.service.SecurityService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
-// import com.vaadin.flow.component.applayout.DrawerToggle; // <-- (ИЗМЕНЕНИЕ!) Убрали импорт
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -31,12 +32,13 @@ public class MainLayout extends AppLayout {
 
         // --- LEFT SIDE ---
         HorizontalLayout leftSide = new HorizontalLayout(
+                // (Убрали "три полоски")
                 logoTitle
         );
         leftSide.setAlignItems(FlexComponent.Alignment.CENTER);
 
         // --- RIGHT SIDE ---
-        Tabs navTabs = createNavigation();
+        Tabs navTabs = createNavigation(); // <-- (МЕТОД ОБНОВЛЕН!)
         Button loginLogoutButton = createLoginLogoutButton();
 
         HorizontalLayout rightSide = new HorizontalLayout(
@@ -60,17 +62,45 @@ public class MainLayout extends AppLayout {
         addToNavbar(header);
     }
 
+    // (ВОТ ИЗМЕНЕНИЕ!)
+    // Этот метод теперь показывает разные ссылки в зависимости от роли
     private Tabs createNavigation() {
         Tabs tabs = new Tabs();
         tabs.setSelectedTab(null);
 
+        // Ссылки, которые видят все (даже анонимы)
         tabs.add(
                 createTab(new RouterLink("Home", HomeView.class)),
                 createTab(new RouterLink("Menu", MenuView.class)),
                 createTab(new RouterLink("About", AboutView.class)),
-                createTab(new RouterLink("Chef", ChefView.class)),
-                createTab(new RouterLink("Book a Table", ReservationView.class))
+                createTab(new RouterLink("Chef", ChefView.class))
         );
+
+        // Получаем текущего пользователя
+        User authenticatedUser = securityService.getAuthenticatedUser();
+
+        if (authenticatedUser != null) {
+            // Ссылки, которые видят ВСЕ залогиненные
+            tabs.add(
+                    createTab(new RouterLink("Book a Table", ReservationView.class)),
+                    createTab(new RouterLink("My Profile", ProfileView.class))
+            );
+
+            // Ссылка только для ОФИЦИАНТА (и Админа)
+            if (authenticatedUser.getRole() == Role.WAITER || authenticatedUser.getRole() == Role.ADMIN) {
+                tabs.add(createTab(new RouterLink("Orders", WaiterView.class)));
+            }
+
+            // Ссылка только для АДМИНА
+            if (authenticatedUser.getRole() == Role.ADMIN) {
+                tabs.add(createTab(new RouterLink("Admin Panel", AdminView.class)));
+            }
+        } else {
+            // Если пользователь не залогинен, показываем "Book a Table" как обычную ссылку
+            // (которая перекинет его на логин, т.к. ReservationView защищена)
+            tabs.add(createTab(new RouterLink("Book a Table", ReservationView.class)));
+        }
+
         return tabs;
     }
 
@@ -80,19 +110,15 @@ public class MainLayout extends AppLayout {
         return tab;
     }
 
-    // В createLoginLogoutButton()
     private Button createLoginLogoutButton() {
-        Button button = new Button();
+        Button button;
+        if (securityService.getAuthenticatedUser() != null) {
+            button = new Button("Sign Out", e -> securityService.logout());
+        } else {
+            button = new Button("Sign In", e -> UI.getCurrent().navigate("auth"));
+        }
         button.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         button.addClassName("btn-login-logout");
-
-        if (securityService.getAuthenticatedUser() != null) {
-            button.setText("Sign Out");
-            button.addClickListener(e -> securityService.logout());
-        } else {
-            button.setText("Sign In");
-            button.addClickListener(e -> UI.getCurrent().navigate("auth"));
-        }
         return button;
     }
 }

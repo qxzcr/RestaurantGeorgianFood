@@ -38,6 +38,13 @@ public class VaadinSecurityConfig extends VaadinWebSecurity {
                         "/menu"
                 ).permitAll()
         );
+        http.logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/") // перенаправление на главную после выхода
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+        );
+
 
         super.configure(http);
         setLoginView(http, AuthView.class);

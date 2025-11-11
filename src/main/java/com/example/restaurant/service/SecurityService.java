@@ -1,3 +1,4 @@
+// src/main/java/com/example/restaurant/service/SecurityService.java
 package com.example.restaurant.service;
 
 import com.example.restaurant.model.User;
@@ -21,14 +22,12 @@ public class SecurityService {
 
     private final AuthenticationManager authenticationManager;
 
-    // (ВОТ ИСПРАВЛЕНИЕ!)
-    // Мы говорим Spring, чтобы он не искал этот бин при запуске,
-    // а создал "ленивую" прокси-заглушку.
+    // We use @Lazy to prevent a circular dependency race condition on startup
     private final @Lazy SecurityContextRepository securityContextRepository;
 
     /**
-     * Получает аутентифицированного пользователя из SecurityContext.
-     * @return Объект User, если он залогинен, иначе null.
+     * Gets the authenticated user from the SecurityContext.
+     * @return User object if logged in, otherwise null.
      */
     public User getAuthenticatedUser() {
         SecurityContext context = SecurityContextHolder.getContext();
@@ -36,42 +35,46 @@ public class SecurityService {
         if (authentication != null && authentication.getPrincipal() instanceof User) {
             return (User) authentication.getPrincipal();
         }
-        return null; // Пользователь не аутентифицирован
+        return null; // User is not authenticated
     }
 
     /**
-     * Выполняет вход пользователя в систему.
-     * @param email Email пользователя
-     * @param password Пароль пользователя (в открытом виде)
-     * @param request Vaadin-запрос, нужный для сохранения сессии
+     * Performs user login.
+     * @param email User's email
+     * @param password User's raw password
+     * @param request Vaadin request needed to save the session
      */
     public void login(String email, String password, VaadinServletRequest request) {
-        // 1. Создаем токен аутентификации (еще не проверенный)
+        // 1. Create an authentication token (not yet validated)
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(email, password);
 
-        // 2. Пытаемся аутентифицировать.
+        // 2. Try to authenticate.
+        // This will call UserDetailsServiceImpl and PasswordEncoder automatically.
         Authentication authentication = authenticationManager.authenticate(authToken);
 
-        // 3. Устанавливаем аутентификацию в SecurityContext
+        // 3. Set the authentication in the SecurityContext
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
 
-        // 4. (Исправление из прошлого раза)
+        // 4. Get the HttpServletResponse
         VaadinServletResponse response = (VaadinServletResponse) VaadinService.getCurrent().getCurrentResponse();
 
-        // 5. Сохраняем SecurityContext в репозитории (т.е. в HTTP-сессии)
-        // К этому моменту бин securityContextRepository уже будет создан.
+        // 5. Save the SecurityContext in the repository (i.e., in the HTTP session)
         securityContextRepository.saveContext(context, request.getHttpServletRequest(), response.getHttpServletResponse());
 
-        // 6. Перезагружаем страницу
+        // 6. Reload the page to update the UI (e.g., show "Sign Out" button)
         UI.getCurrent().getPage().setLocation("/");
     }
 
     /**
-     * Выполняет выход пользователя из системы.
+     * Performs user logout.
      */
     public void logout() {
-        UI.getCurrent().getPage().setLocation("/logout");
+        // (HERE IS THE FIX!)
+        // We can't use setLocation() because Vaadin's router intercepts it.
+        // We must use JavaScript to force a full browser navigation.
+        // This will correctly hit the Spring Security /logout endpoint.
+        UI.getCurrent().getPage().executeJs("window.location.href = '/logout'");
     }
 }
