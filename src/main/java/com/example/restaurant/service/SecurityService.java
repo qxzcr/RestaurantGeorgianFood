@@ -71,10 +71,24 @@ public class SecurityService {
      * Performs user logout.
      */
     public void logout() {
-        // (HERE IS THE FIX!)
-        // We can't use setLocation() because Vaadin's router intercepts it.
-        // We must use JavaScript to force a full browser navigation.
-        // This will correctly hit the Spring Security /logout endpoint.
-        UI.getCurrent().getPage().executeJs("window.location.href = '/logout'");
+        // 1. Чётко и полностью очищаем контекст авторизации
+        SecurityContextHolder.clearContext();
+
+        // 2. Сохраняем пустой SecurityContext в хранилище (ВАЖНО!)
+        SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
+        VaadinServletRequest req = (VaadinServletRequest) VaadinService.getCurrentRequest();
+        VaadinServletResponse resp = (VaadinServletResponse) VaadinService.getCurrentResponse();
+        securityContextRepository.saveContext(emptyContext, req.getHttpServletRequest(), resp.getHttpServletResponse());
+
+        // 3. Закрываем Vaadin session (обязательно после очистки контекста)
+        UI.getCurrent().getSession().close();
+
+        // 4. Удаляем JWT токен (если он у тебя используется на клиенте)
+        UI.getCurrent().getPage().executeJs("localStorage.removeItem('token');");
+
+        // 5. И наконец — отправляем на главную
+        UI.getCurrent().getPage().setLocation("/");
     }
+
+
 }

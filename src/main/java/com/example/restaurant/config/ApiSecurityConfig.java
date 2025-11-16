@@ -1,3 +1,4 @@
+// src/main/java/com/example/restaurant/config/ApiSecurityConfig.java
 package com.example.restaurant.config;
 
 import com.example.restaurant.security.JwtAuthenticationFilter;
@@ -15,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
-@Order(1) // (Очень важно!) Этот конфиг должен быть ПЕРВЫМ
+@Order(1) // This must be first
 public class ApiSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -29,15 +30,16 @@ public class ApiSecurityConfig {
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http
-                // (Очень важно!) Этот конфиг работает ТОЛЬКО для /api/**
-                .securityMatcher("/api/**")
+                .securityMatcher("/api/**") // Apply this config ONLY to /api/**
                 .csrf(AbstractHttpConfigurer::disable)
-                // (Очень важно!) STATELESS только для API
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Логин/регистрация в API
+                        .requestMatchers("/api/auth/**").permitAll() // API login/register
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/orders/**").hasRole("WAITER")
+                        // (HERE IS THE FIX!)
+                        // Protect /api/profile/**, allowing any logged-in user
+                        .requestMatchers("/api/profile/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

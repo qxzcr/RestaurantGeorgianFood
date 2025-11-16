@@ -56,6 +56,7 @@ public class AuthController {
         userService.register(user); // ← Только save
         return ResponseEntity.ok("Konto utworzone");
     }
+
 }
 
 record LoginRequest(String email, String password) {}

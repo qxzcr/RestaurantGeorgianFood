@@ -1,17 +1,16 @@
-// src/main/java/com/example/restaurant/model/Dish.java
 package com.example.restaurant.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*; // <-- (FIX!)
 
 import java.math.BigDecimal;
+import java.util.List; // <-- (FIX!)
 
 @Entity
 @Table(name = "dishes")
-@Data
+// (FIX!) We replace @Data to prevent infinite loops
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -30,9 +29,16 @@ public class Dish {
     @Column(nullable = false)
     private BigDecimal price;
 
-    private String imageUrl; // URL к фото блюда
+    private String imageUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DishCategory category;
+
+    // (FIX!) Add the other side of the Order relationship
+    @OneToMany(mappedBy = "dish")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<OrderItem> orderItems;
+
 }

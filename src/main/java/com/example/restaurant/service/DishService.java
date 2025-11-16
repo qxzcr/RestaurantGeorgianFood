@@ -23,12 +23,17 @@ public class DishService {
         return dishRepository.findByCategory(category);
     }
 
-    // Эти методы понадобятся тебе для /admin (CRUD)
+    // (NEW!) This is needed for the Admin Panel
     public Dish saveDish(Dish dish) {
         return dishRepository.save(dish);
     }
 
+    // (NEW!) This is needed for the Admin Panel
     public void deleteDish(Long id) {
+        if (id == null) {
+            // Handle error, e.g., throw exception or log
+            return;
+        }
         dishRepository.deleteById(id);
     }
 }

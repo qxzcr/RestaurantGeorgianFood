@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 
     // Vaadin
     implementation 'com.vaadin:vaadin-spring-boot-starter:24.4.8'

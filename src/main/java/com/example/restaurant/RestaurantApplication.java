@@ -42,7 +42,7 @@ public class RestaurantApplication {
                         .description("Traditional Georgian cheese bread with cheese inside.")
                         .price(new BigDecimal("12.50"))
                         .category(DishCategory.STARTER)
-                        .imageUrl("/images/dishes/khachapuri.jpg")
+                        .imageUrl("resources/static/images/khachapuri.jpg")
                         .build());
                 dishRepository.save(Dish.builder()
                         .name("Pkhali Assorti")

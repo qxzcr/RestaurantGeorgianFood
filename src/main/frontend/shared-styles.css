@@ -1,9 +1,1009 @@
+/*!* src/main/frontend/shared-styles.css *!*/
+
+/*!* --- Import Google Fonts --- *!*/
+/*@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@400;500;600&display=swap');*/
+
+/*!* --- Animations --- *!*/
+/*@keyframes fadeInUp {*/
+/*    from { opacity: 0; transform: translateY(20px); }*/
+/*    to { opacity: 1; transform: translateY(0); }*/
+/*}*/
+/*@keyframes scaleIn {*/
+/*    from { opacity: 0; transform: scale(0.8); }*/
+/*    to { opacity: 1; transform: scale(1); }*/
+/*}*/
+/*@keyframes fadeInRight {*/
+/*    from { opacity: 0; transform: translateX(40px); }*/
+/*    to { opacity: 1; transform: translateX(0); }*/
+/*}*/
+/*@keyframes slideInFromBottom {*/
+/*    from {*/
+/*        opacity: 0;*/
+/*        transform: translateY(50px);*/
+/*    }*/
+/*    to {*/
+/*        opacity: 1;*/
+/*        transform: translateY(0);*/
+/*    }*/
+/*}*/
+
+/*!* --- Reset and base settings --- *!*/
+/*html, body {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    font-family: 'Poppins', 'Segoe UI', sans-serif;*/
+/*    background-color: #fdfdfa;*/
+/*    color: #3b3b3b;*/
+/*}*/
+
+/*!* --- Navbar --- *!*/
+/*.navbar {*/
+/*    background-color: #f3e9d2; !* Beige *!*/
+/*    box-shadow: 0 2px 8px rgba(0,0,0,0.05);*/
+/*    position: sticky;*/
+/*    top: 0;*/
+/*    z-index: 100;*/
+/*}*/
+/*.nav-container {*/
+/*    max-width: 1200px;*/
+/*    margin: 0 auto;*/
+/*    padding: 0.5rem 2rem;*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*}*/
+/*.nav-title {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-weight: 700;*/
+/*    font-size: 2rem;*/
+/*    color: #5D4037;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    margin-left: 1rem;*/
+/*}*/
+/*.nav-container vaadin-tabs { background: transparent; }*/
+/*.nav-container vaadin-tab { margin: 0 0.5rem; }*/
+/*.nav-container vaadin-tab a {*/
+/*    text-decoration: none;*/
+/*    color: #5D4037;*/
+/*    font-weight: 600;*/
+/*    transition: color 0.3s;*/
+/*    font-size: 1rem;*/
+/*}*/
+/*.nav-container vaadin-tab a:hover { color: #3b3b3b; }*/
+/*.nav-container vaadin-tab[selected] a { color: #3b3b3b; }*/
+/*.nav-container vaadin-tabs::part(indicator) { display: none; }*/
+
+/*.btn-login-logout {*/
+/*    margin-left: 1rem;*/
+/*    color: #5D4037;*/
+/*    font-weight: 600;*/
+/*}*/
+/*.btn-login-logout:hover { color: #8D6E63; }*/
+
+
+/*!* --- Hero Section (Left Column) --- *!*/
+/*.hero {*/
+/*    background: url("/images/restaurant-bg.jpg") center/cover no-repeat;*/
+/*    height: 100%;*/
+/*    position: relative;*/
+/*    color: white;*/
+/*    overflow: hidden;*/
+/*    z-index: 2;*/
+/*    clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%); !* Slanted line *!*/
+/*}*/
+/*.hero::before {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    top: 0; left: 0; right: 0; bottom: 0;*/
+/*    background: inherit;*/
+/*    background-size: cover;*/
+/*    background-position: center;*/
+/*    z-index: 1;*/
+/*}*/
+/*.hero::after {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    inset: 0;*/
+/*    background: rgba(0, 0, 0, 0.45);*/
+/*    z-index: 1;*/
+/*    clip-path: inherit;*/
+/*}*/
+/*.hero-content {*/
+/*    position: relative;*/
+/*    z-index: 2;*/
+/*    max-width: 800px;*/
+/*    text-align: center;*/
+/*    padding: 2rem;*/
+/*}*/
+/*.hero-title {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 2.8rem;*/
+/*    font-weight: 700;*/
+/*    letter-spacing: 2px;*/
+/*    margin-bottom: 2rem;*/
+/*    text-transform: uppercase;*/
+/*    color: #f8f8f4;*/
+/*    animation: fadeInUp 1s ease-out 0.3s;*/
+/*    animation-fill-mode: backwards;*/
+/*}*/
+/*.hero-buttons {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    gap: 1.5rem;*/
+/*    animation: fadeInUp 1s ease-out 0.6s;*/
+/*    animation-fill-mode: backwards;*/
+/*}*/
+/*.btn-menu, .btn-book {*/
+/*    padding: 1rem 2.5rem;*/
+/*    border: 2px solid transparent;*/
+/*    cursor: pointer;*/
+/*    border-radius: 8px;*/
+/*    font-weight: 600;*/
+/*    transition: all 0.3s ease;*/
+/*    font-size: 1.1rem;*/
+/*    text-transform: uppercase;*/
+/*    letter-spacing: 0.5px;*/
+/*}*/
+/*.btn-menu {*/
+/*    background-color: #fff;*/
+/*    color: #5D4037;*/
+/*    border-color: #5D4037;*/
+/*}*/
+/*.btn-menu:hover {*/
+/*    background-color: #f0f0f0;*/
+/*    color: #795548;*/
+/*    border-color: #795548;*/
+/*}*/
+/*.btn-book {*/
+/*    background-color: #5D4037;*/
+/*    color: white;*/
+/*    border-color: #5D4037;*/
+/*}*/
+/*.btn-book:hover {*/
+/*    background-color: #795548;*/
+/*    border-color: #795548;*/
+/*}*/
+
+/*!* --- About Section (Right Column) --- *!*/
+/*.about-section {*/
+/*    height: 100%;*/
+/*    box-sizing: border-box;*/
+/*    padding: 3rem !important;*/
+/*    text-align: center;*/
+/*    position: relative;*/
+/*    z-index: 3;*/
+/*    background: #ffffff !important;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
+/*.about-welcome {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    color: #5D4037;*/
+/*    font-size: 0.9rem;*/
+/*    text-transform: uppercase;*/
+/*    letter-spacing: 1px;*/
+/*    margin-bottom: 0.5rem;*/
+/*    opacity: 0;*/
+/*    animation: fadeInRight 0.8s ease-out 0.2s forwards;*/
+/*}*/
+/*.about-title {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-weight: 700;*/
+/*    font-size: 2.8rem;*/
+/*    color: #5D4037;*/
+/*    margin-bottom: 1rem;*/
+/*    text-shadow: none;*/
+/*    opacity: 0;*/
+/*    animation: fadeInRight 0.8s ease-out 0.4s forwards;*/
+/*}*/
+/*.about-text {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 1.1rem;*/
+/*    color: #6d4c41;*/
+/*    line-height: 1.7;*/
+/*    max-width: 420px;*/
+/*    margin: 0 auto 2.5rem;*/
+/*    text-shadow: none;*/
+/*    opacity: 0;*/
+/*    animation: fadeInRight 0.8s ease-out 0.6s forwards;*/
+/*}*/
+/*.about-image {*/
+/*    width: 200px;*/
+/*    height: 200px;*/
+/*    border-radius: 50%;*/
+/*    object-fit: cover;*/
+/*    border: 5px solid #f0f0f0;*/
+/*    box-shadow: 0 8px 25px rgba(0,0,0,0.1);*/
+/*    margin-bottom: 1.5rem;*/
+/*    opacity: 0;*/
+/*    animation: scaleIn 0.9s ease-out 0.8s forwards;*/
+/*}*/
+/*.about-caption {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-weight: 500;*/
+/*    color: #6d4c41;*/
+/*    margin-bottom: 2rem;*/
+/*    font-style: italic;*/
+/*    opacity: 0;*/
+/*    animation: fadeInRight 0.8s ease-out 1s forwards;*/
+/*}*/
+/*.social-icons {*/
+/*    gap: 1.8rem;*/
+/*    opacity: 0;*/
+/*    animation: fadeInRight 0.8s ease-out 1.2s forwards;*/
+/*}*/
+/*.social-icons span {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-weight: 700;*/
+/*    font-size: 1.4rem;*/
+/*    color: #5D4037;*/
+/*    cursor: pointer;*/
+/*    transition: all 0.3s ease;*/
+/*    text-shadow: none;*/
+/*}*/
+/*.social-icons span:hover {*/
+/*    color: #bfa880;*/
+/*    transform: translateY(-3px);*/
+/*}*/
+
+/*!* --- Gallery Section --- *!*/
+/*.gallery-section {*/
+/*    width: 100%;*/
+/*    padding: 4rem 0;*/
+/*    background-color: #fdfdfa;*/
+/*    box-sizing: border-box;*/
+/*    overflow: hidden;*/
+/*}*/
+/*.gallery-section h2 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 2.5rem;*/
+/*    color: #5D4037;*/
+/*    margin-bottom: 2rem;*/
+/*    text-align: center;*/
+/*}*/
+/*.gallery-grid {*/
+/*    display: grid;*/
+/*    gap: 1.5rem;*/
+/*    width: 100%;*/
+/*    max-width: 1200px;*/
+/*    margin: 0 auto;*/
+/*    padding: 0 2rem;*/
+/*    box-sizing: border-box;*/
+/*    grid-template-columns: repeat(3, 1fr);*/
+/*    grid-template-areas:*/
+/*        "text1  photo1 photo1"*/
+/*        "photo2 photo2 photo3"*/
+/*        "text2  text2  photo3";*/
+/*}*/
+/*.gallery-item-2 { grid-area: photo1; height: 300px; }*/
+/*.gallery-item-3 { grid-area: photo2; height: 300px; }*/
+/*.gallery-item-5 { grid-area: photo3; height: 100%; }*/
+/*.gallery-item-1 { grid-area: text1; }*/
+/*.gallery-item-4 { grid-area: text2; }*/
+
+/*.gallery-grid > div {*/
+/*    border-radius: 8px;*/
+/*    overflow: hidden;*/
+/*    box-shadow: 0 4px 15px rgba(0,0,0,0.05);*/
+/*    animation: slideInFromBottom 0.7s ease-out;*/
+/*    animation-fill-mode: backwards;*/
+/*}*/
+/*.gallery-item-1 { animation-delay: 0.1s; }*/
+/*.gallery-item-2 { animation-delay: 0.2s; }*/
+/*.gallery-item-3 { animation-delay: 0.3s; }*/
+/*.gallery-item-4 { animation-delay: 0.4s; }*/
+/*.gallery-item-5 { animation-delay: 0.5s; }*/
+
+/*.gallery-item-text {*/
+/*    background: #fff;*/
+/*    padding: 2rem;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*    height: 100%;*/
+/*    box-sizing: border-box;*/
+/*}*/
+/*.gallery-item-text h1 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 1.5rem;*/
+/*    color: #5D4037;*/
+/*    margin: 0 0 0.5rem 0;*/
+/*}*/
+/*.gallery-item-text p {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    color: #6d4c41;*/
+/*    margin: 0;*/
+/*    line-height: 1.6;*/
+/*}*/
+/*.gallery-item-photo {*/
+/*    padding: 0 !important;*/
+/*    background: #eee;*/
+/*}*/
+/*.gallery-image {*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    object-fit: cover;*/
+/*}*/
+
+/*!* --- Footer Section --- *!*/
+/*.footer-section {*/
+/*    width: 100%;*/
+/*    background-color: #5D4037;*/
+/*    color: #f3e9d2;*/
+/*    padding: 4rem 0;*/
+/*    box-sizing: border-box;*/
+/*}*/
+/*.footer-columns {*/
+/*    display: flex;*/
+/*    justify-content: space-around;*/
+/*    width: 100%;*/
+/*    max-width: 1200px;*/
+/*    margin: 0 auto;*/
+/*    flex-wrap: wrap;*/
+/*    gap: 2rem;*/
+/*}*/
+/*.footer-column {*/
+/*    flex-basis: 300px;*/
+/*    flex-grow: 1;*/
+/*    padding: 0 1.5rem;*/
+/*    box-sizing: border-box;*/
+/*}*/
+/*.footer-column h2 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 1.5rem;*/
+/*    color: #fff;*/
+/*    margin-bottom: 1.5rem;*/
+/*}*/
+/*.footer-column span, .footer-column p {*/
+/*    display: block;*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 0.95rem;*/
+/*    line-height: 1.8;*/
+/*    color: #f3e9d2;*/
+/*}*/
+
+/*!* --- Responsive (Mobile) --- *!*/
+/*@media (max-width: 992px) {*/
+/*    .hero {*/
+/*        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);*/
+/*    }*/
+/*    .about-section {*/
+/*        padding: 2rem;*/
+/*    }*/
+/*    .about-title {*/
+/*        font-size: 2.2rem;*/
+/*    }*/
+/*    .hero-title {*/
+/*        font-size: 2.8rem;*/
+/*    }*/
+/*    .hero-buttons {*/
+/*        flex-direction: column;*/
+/*        align-items: center;*/
+/*    }*/
+/*    .btn-menu, .btn-book {*/
+/*        width: 200px;*/
+/*    }*/
+/*}*/
+/*@media (max-width: 600px) {*/
+/*    .profile-card {*/
+/*        grid-template-columns: 1fr; !* 1 column on mobile *!*/
+/*    }*/
+/*}*/
+
+
+/*!* ===============================================*/
+/*    AUTH VIEW STYLES*/
+/*===============================================*/
+/**!*/
+/*.auth-view {*/
+/*    !* (ИСПРАВЛЕНИЕ!) Используем твою фоновую картинку *!*/
+/*    background-image:*/
+/*            linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),*/
+/*            url("/images/restaurant-bg.jpg"); !* <-- Используем фон с главной *!*/
+/*    background-size: cover;*/
+/*    background-position: center;*/
+/*    min-height: 100vh;*/
+/*}*/
+/*.auth-container {*/
+/*    !* (ИСПРАВЛЕНИЕ!) Делаем контейнер полупрозрачным *!*/
+/*    background: rgba(255, 255, 255, 0.95); !* Белый, но слегка просвечивает *!*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);*/
+/*    width: 100%;*/
+/*    max-width: 450px;*/
+/*    overflow: hidden;*/
+/*    animation: scaleIn 0.5s ease-out;*/
+/*}*/
+/*.auth-form {*/
+/*    padding: 2.5rem 3rem;*/
+/*    box-sizing: border-box;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    gap: 1.25rem;*/
+/*}*/
+/*.auth-title {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 2.2rem;*/
+/*    font-weight: 700;*/
+/*    color: #5D4037; !* Brown *!*/
+/*    margin: 0;*/
+/*    text-align: center;*/
+/*}*/
+/*.auth-subtitle {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 1rem;*/
+/*    font-weight: 400;*/
+/*    color: #6d4c41; !* Light brown *!*/
+/*    margin: -1rem 0 0.5rem 0;*/
+/*    text-align: center;*/
+/*}*/
+/*.auth-input {*/
+/*    width: 100%;*/
+/*}*/
+/*.auth-input::part(label) {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-weight: 600;*/
+/*    color: #5D4037;*/
+/*    font-size: 0.9rem;*/
+/*}*/
+/*.auth-input::part(input-field) {*/
+/*    background-color: #fdfdfa; !* Light beige *!*/
+/*    border-radius: 8px;*/
+/*    border: 1px solid #e0e0e0;*/
+/*    transition: all 0.3s ease;*/
+/*}*/
+/*.auth-input::part(input-field):focus-within {*/
+/*    border-color: #5D4037;*/
+/*    box-shadow: 0 0 0 2px rgba(93, 64, 55, 0.1);*/
+/*}*/
+/*.auth-btn {*/
+/*    width: 100%;*/
+/*    --lumo-primary-color: #5D4037; !* Brown bg *!*/
+/*    --lumo-primary-text-color: #ffffff; !* White text *!*/
+/*    font-weight: 600;*/
+/*    border-radius: 8px;*/
+/*    padding: 0.8rem;*/
+/*    margin-top: 0.5rem;*/
+/*    transition: background-color 0.3s ease;*/
+/*}*/
+/*.auth-btn:hover {*/
+/*    --lumo-primary-color: #795548; !* Lighter brown *!*/
+/*}*/
+/*.auth-link {*/
+/*    width: 100%;*/
+/*    text-align: center;*/
+/*    --lumo-tertiary-text-color: #6d4c41; !* Brown *!*/
+/*    font-size: 0.9rem;*/
+/*}*/
+/*.auth-link:hover {*/
+/*    --lumo-tertiary-text-color: #3b3b3b;*/
+/*}*/
+
+
+/*!* ===============================================*/
+/*    ADMIN PANEL STYLES*/
+/*===============================================*/
+/**!*/
+/*.admin-view {*/
+/*    width: 100%;*/
+/*    max-width: 1200px;*/
+/*    margin: 0 auto;*/
+/*    padding: 2rem;*/
+/*    box-sizing: border-box;*/
+/*}*/
+/*.admin-view h1 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 3rem;*/
+/*    color: #5D4037;*/
+/*    text-align: center;*/
+/*}*/
+/*.admin-tabs {*/
+/*    margin-bottom: 2rem;*/
+/*    background: #fff;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 4px 15px rgba(0,0,0,0.05);*/
+/*    padding: 0.5rem;*/
+/*}*/
+/*.admin-tabs vaadin-tab {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-weight: 600;*/
+/*    color: #6d4c41;*/
+/*}*/
+/*.admin-tabs vaadin-tab[selected] {*/
+/*    color: #5D4037;*/
+/*}*/
+/*.admin-tabs::part(indicator) {*/
+/*    background-color: #5D4037;*/
+/*    height: 3px;*/
+/*}*/
+/*.admin-content {*/
+/*    width: 100%;*/
+/*}*/
+/*.admin-section-title {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 2.2rem;*/
+/*    color: #5D4037;*/
+/*    border-bottom: 2px solid #f3e9d2;*/
+/*    padding-bottom: 0.5rem;*/
+/*    margin-top: 0;*/
+/*}*/
+/*.admin-grid {*/
+/*    height: 400px;*/
+/*    border-radius: 8px;*/
+/*    border: 1px solid #e0e0e0;*/
+/*}*/
+
+
+/*!* ===============================================*/
+/*    CHEF VIEW STYLES*/
+/*===============================================*/
+/**!*/
+/*.chef-view {*/
+/*    background: #ffffff;*/
+/*    padding: 3rem;*/
+/*    box-sizing: border-box;*/
+/*}*/
+/*.chef-container {*/
+/*    display: flex;*/
+/*    max-width: 1200px;*/
+/*    width: 100%;*/
+/*    margin: 0 auto;*/
+/*    gap: 3rem;*/
+/*    align-items: center;*/
+/*}*/
+/*.chef-image-container {*/
+/*    flex: 1;*/
+/*    min-width: 300px;*/
+/*}*/
+/*.chef-image {*/
+/*    width: 100%;*/
+/*    height: auto;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 10px 30px rgba(0,0,0,0.1);*/
+/*}*/
+/*.chef-info {*/
+/*    flex: 1.5;*/
+/*}*/
+/*.chef-info h1 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 2.8rem;*/
+/*    color: #5D4037;*/
+/*    margin: 0 0 0.5rem 0;*/
+/*}*/
+/*.chef-info .chef-name {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-style: italic;*/
+/*    font-size: 1.5rem;*/
+/*    color: #bfa880;*/
+/*    margin-top: -1rem;*/
+/*    margin-bottom: 1.5rem;*/
+/*}*/
+/*.chef-info p {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 1.1rem;*/
+/*    line-height: 1.7;*/
+/*    color: #6d4c41;*/
+/*}*/
+/*.chef-gallery-section {*/
+/*    width: 100%;*/
+/*    max-width: 1200px;*/
+/*    margin: 4rem auto 0 auto;*/
+/*    padding: 0;*/
+/*    box-sizing: border-box;*/
+/*    overflow: hidden;*/
+/*}*/
+/*.chef-gallery-section h2 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 2.5rem;*/
+/*    color: #5D4037;*/
+/*    text-align: center;*/
+/*    margin-bottom: 2rem;*/
+/*}*/
+/*.chef-gallery-grid {*/
+/*    display: grid;*/
+/*    grid-template-columns: 1fr 1fr;*/
+/*    grid-template-rows: 250px 250px;*/
+/*    gap: 1.5rem;*/
+/*    width: 100%;*/
+/*    grid-template-areas:*/
+/*        "tall photo-2"*/
+/*        "tall photo-3";*/
+/*}*/
+/*.chef-gallery-item {*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    border-radius: 12px;*/
+/*    overflow: hidden;*/
+/*    box-shadow: 0 8px 25px rgba(0,0,0,0.1);*/
+/*    animation: slideInFromBottom 0.7s ease-out;*/
+/*    animation-fill-mode: backwards;*/
+/*}*/
+/*.chef-gallery-item:nth-child(1) {*/
+/*    grid-area: tall;*/
+/*    animation-delay: 0.1s;*/
+/*}*/
+/*.chef-gallery-item:nth-child(2) {*/
+/*    grid-area: photo-2;*/
+/*    animation-delay: 0.2s;*/
+/*}*/
+/*.chef-gallery-item:nth-child(3) {*/
+/*    grid-area: photo-3;*/
+/*    animation-delay: 0.3s;*/
+/*}*/
+/*.chef-gallery-image {*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    object-fit: cover;*/
+/*    transition: transform 0.4s ease;*/
+/*}*/
+/*.chef-gallery-item:hover .chef-gallery-image {*/
+/*    transform: scale(1.1);*/
+/*}*/
+
+
+/*!* ===============================================*/
+/*    MENU VIEW STYLES*/
+/*===============================================*/
+/**!*/
+/*.menu-view {*/
+/*    width: 100%;*/
+/*    max-width: 1200px;*/
+/*    margin: 0 auto;*/
+/*    padding: 2rem;*/
+/*    box-sizing: border-box;*/
+/*    align-items: center;*/
+/*}*/
+/*.menu-view h1 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 3rem;*/
+/*    color: #5D4037;*/
+/*    text-align: center;*/
+/*    margin-bottom: 2rem;*/
+/*}*/
+/*.menu-filters {*/
+/*    background-color: #f3e9d2;*/
+/*    border-radius: 50px;*/
+/*    padding: 0.5rem;*/
+/*    margin-bottom: 3rem;*/
+/*}*/
+/*.menu-filters vaadin-tab {*/
+/*    color: #5D4037;*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-weight: 600;*/
+/*}*/
+/*.menu-filters vaadin-tab[selected] {*/
+/*    background-color: #ffffff;*/
+/*    color: #3b3b3b;*/
+/*    border-radius: 40px;*/
+/*    box-shadow: 0 4px 10px rgba(0,0,0,0.1);*/
+/*}*/
+/*.menu-filters vaadin-tabs::part(indicator) {*/
+/*    display: none;*/
+/*}*/
+/*.menu-grid {*/
+/*    display: grid;*/
+/*    width: 100%;*/
+/*    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));*/
+/*    gap: 1.5rem;*/
+/*    margin-bottom: 3rem;*/
+/*}*/
+/*.dish-card {*/
+/*    background: #fff;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 4px 15px rgba(0,0,0,0.05);*/
+/*    transition: all 0.3s ease;*/
+/*    overflow: hidden;*/
+/*    animation: scaleIn 0.5s ease-out;*/
+/*}*/
+/*.dish-card:hover {*/
+/*    box-shadow: 0 8px 25px rgba(0,0,0,0.1);*/
+/*    transform: translateY(-5px);*/
+/*}*/
+/*.dish-card-image {*/
+/*    width: 100%;*/
+/*    height: 200px;*/
+/*    object-fit: cover;*/
+/*}*/
+/*.dish-card-content {*/
+/*    padding: 1.5rem;*/
+/*}*/
+/*.dish-card-header {*/
+/*    align-items: baseline;*/
+/*    gap: 1rem;*/
+/*}*/
+/*.dish-card h3 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 1.3rem;*/
+/*    color: #5D4037;*/
+/*    margin: 0;*/
+/*}*/
+/*.dish-card-price {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 1.1rem;*/
+/*    font-weight: 600;*/
+/*    color: #3b3b3b;*/
+/*    margin-left: auto;*/
+/*    white-space: nowrap;*/
+/*}*/
+/*.dish-card-description {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 0.95rem;*/
+/*    color: #6d4c41;*/
+/*    line-height: 1.6;*/
+/*    margin-top: 0.5rem;*/
+/*}*/
+
+
+/*!* ===============================================*/
+/*    ABOUT VIEW STYLES*/
+/*===============================================*/
+/**!*/
+/*.about-view {*/
+/*    background: #ffffff;*/
+/*    padding: 3rem;*/
+/*    box-sizing: border-box;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    min-height: calc(100vh - 80px);*/
+/*}*/
+/*.about-container {*/
+/*    display: flex;*/
+/*    max-width: 1200px;*/
+/*    width: 100%;*/
+/*    margin: 0 auto;*/
+/*    gap: 3rem;*/
+/*    align-items: center;*/
+/*}*/
+/*.about-info {*/
+/*    flex: 1.5;*/
+/*}*/
+/*.about-info h1 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 2.8rem;*/
+/*    color: #5D4037;*/
+/*    margin: 0 0 1.5rem 0;*/
+/*}*/
+/*.about-info p {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 1.1rem;*/
+/*    line-height: 1.7;*/
+/*    color: #6d4c41;*/
+/*    margin-bottom: 1rem;*/
+/*}*/
+/*.about-image-container {*/
+/*    flex: 1;*/
+/*    min-width: 300px;*/
+/*}*/
+/*.about-image-style {*/
+/*    width: 100%;*/
+/*    height: auto;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 10px 30px rgba(0,0,0,0.1);*/
+/*}*/
+
+
+/*!* ===============================================*/
+/*    RESERVATIONS VIEW STYLES*/
+/*===============================================*/
+/**!*/
+/*.reservation-view {*/
+/*    width: 100%;*/
+/*    max-width: 800px;*/
+/*    margin: 0 auto;*/
+/*    padding: 3rem 1rem;*/
+/*    box-sizing: border-box;*/
+/*    background: #ffffff;*/
+/*    min-height: calc(100vh - 80px);*/
+/*}*/
+/*.reservation-view h1 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 3rem;*/
+/*    color: #5D4037;*/
+/*}*/
+/*.reservation-intro {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 1.1rem;*/
+/*    color: #6d4c41;*/
+/*    text-align: center;*/
+/*    max-width: 600px;*/
+/*    margin-bottom: 2rem;*/
+/*}*/
+/*.reservation-form {*/
+/*    width: 100%;*/
+/*    background: #fdfdfa;*/
+/*    padding: 2rem;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 4px 15px rgba(0,0,0,0.05);*/
+/*}*/
+/*.reservation-form > * {*/
+/*    --lumo-primary-color: #5D4037;*/
+/*}*/
+/*.reservation-form vaadin-date-picker,*/
+/*.reservation-form vaadin-time-picker,*/
+/*.reservation-form vaadin-integer-field,*/
+/*.reservation-form vaadin-text-field {*/
+/*    width: 100%;*/
+/*}*/
+
+
+/*!* ===============================================*/
+/*    PROFILE VIEW STYLES*/
+/*===============================================*/
+/**!*/
+/*.profile-view {*/
+/*    width: 100%;*/
+/*    padding: 2rem;*/
+/*    box-sizing: border-box;*/
+/*    background: #fdfdfa;*/
+/*}*/
+/*.profile-view h1 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 3rem;*/
+/*    color: #5D4037;*/
+/*    text-align: center;*/
+/*    margin-bottom: 2rem;*/
+/*}*/
+/*.profile-container {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    gap: 2.5rem;*/
+/*    width: 100%;*/
+/*    max-width: 900px;*/
+/*}*/
+/*.profile-section {*/
+/*    width: 100%;*/
+/*    box-sizing: border-box;*/
+/*    padding: 0;*/
+/*    margin: 0;*/
+/*}*/
+/*.profile-section h2 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 2rem;*/
+/*    color: #5D4037;*/
+/*    border-bottom: 2px solid #f3e9d2;*/
+/*    padding-bottom: 0.5rem;*/
+/*    margin-top: 0;*/
+/*    margin-bottom: 1.5rem;*/
+/*}*/
+/*.profile-card {*/
+/*    background: #ffffff;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 4px 15px rgba(0,0,0,0.05);*/
+/*    padding: 1.5rem 2rem;*/
+/*    display: grid;*/
+/*    grid-template-columns: 1fr 1fr;*/
+/*    gap: 1.5rem;*/
+/*}*/
+/*.profile-row {*/
+/*    align-items: center;*/
+/*    gap: 1rem;*/
+/*}*/
+/*.profile-row vaadin-icon {*/
+/*    color: #bfa880;*/
+/*    width: 24px;*/
+/*    height: 24px;*/
+/*}*/
+/*.profile-row .profile-label {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 0.9rem;*/
+/*    font-weight: 600;*/
+/*    color: #5D4037;*/
+/*    display: block;*/
+/*}*/
+/*.profile-row .profile-value {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 1.1rem;*/
+/*    color: #3b3b3b;*/
+/*    display: block;*/
+/*}*/
+/*.profile-order-history-placeholder {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    gap: 1rem;*/
+/*    padding: 3rem;*/
+/*    background: #fff;*/
+/*    border-radius: 12px;*/
+/*    border: 2px dashed #e0e0e0;*/
+/*    color: #888;*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-style: italic;*/
+/*}*/
+/*.profile-order-history-placeholder vaadin-icon {*/
+/*    width: 32px;*/
+/*    height: 32px;*/
+/*    color: #aaa;*/
+/*}*/
+/*.reservation-grid {*/
+/*    width: 100%;*/
+/*    background: #ffffff;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 4px 15px rgba(0,0,0,0.05);*/
+/*    border: 1px solid #f0f0f0;*/
+/*}*/
+
+/*!* ===============================================*/
+/*    WAITER VIEW STYLES*/
+/*===============================================*/
+/**!*/
+/*.waiter-view {*/
+/*    background-color: #fdfdfa;*/
+/*}*/
+/*.active-orders-column {*/
+/*    padding: 2rem;*/
+/*    box-sizing: border-box;*/
+/*    gap: 1.5rem;*/
+/*    overflow-y: auto;*/
+/*}*/
+/*.active-orders-column h2 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 2.2rem;*/
+/*    color: #5D4037;*/
+/*    margin: 0;*/
+/*}*/
+/*.order-card {*/
+/*    background: #ffffff;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 4px 15px rgba(0,0,0,0.05);*/
+/*    padding: 1.5rem;*/
+/*    width: 100%;*/
+/*    max-width: 500px;*/
+/*    box-sizing: border-box;*/
+/*    border-left: 5px solid #aaa;*/
+/*}*/
+/*.order-card.preparing {*/
+/*    border-left-color: #f39c12;*/
+/*}*/
+/*.order-card.ready {*/
+/*    border-left-color: #2ecc71;*/
+/*}*/
+/*.order-card.served {*/
+/*    border-left-color: #3498db;*/
+/*}*/
+/*.order-card h2 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 1.5rem;*/
+/*    color: #5D4037;*/
+/*    margin: 0;*/
+/*}*/
+/*.order-card .order-status-badge {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-weight: 600;*/
+/*    font-size: 0.9rem;*/
+/*    padding: 0.3rem 0.8rem;*/
+/*    border-radius: 20px;*/
+/*    color: #fff;*/
+/*}*/
+/*.order-card.preparing .order-status-badge { background-color: #f39c12; }*/
+/*.order-card.ready .order-status-badge { background-color: #2ecc71; }*/
+/*.order-card.served .order-status-badge { background-color: #3498db; }*/
+/*.order-form {*/
+/*    background: #ffffff;*/
+/*    border-left: 1px solid #e0e0e0;*/
+/*    box-shadow: -10px 0 20px rgba(0,0,0,0.03);*/
+/*}*/
+/*.order-form h2 {*/
+/*    font-family: 'Playfair Display', serif;*/
+/*    font-size: 1.8rem;*/
+/*    color: #5D4037;*/
+/*    margin: 0 0 1rem 0;*/
+/*}*/
+/*.current-order-list {*/
+/*    background-color: #fdfdfa;*/
+/*    border-radius: 8px;*/
+/*    padding: 1rem;*/
+/*    min-height: 100px;*/
+/*}*//* src/main/frontend/shared-styles.css */
 /* src/main/frontend/shared-styles.css */
 
 /* --- Import Google Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@400;500;600&display=swap');
 
-/* --- Анимации --- */
+/* --- Animations --- */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -63,8 +1063,6 @@ html, body {
 }
 .nav-container vaadin-tabs { background: transparent; }
 .nav-container vaadin-tab { margin: 0 0.5rem; }
-/* src/main/frontend/shared-styles.css */
-
 .nav-container vaadin-tab a {
     text-decoration: none;
     color: #5D4037;
@@ -92,9 +1090,8 @@ html, body {
     color: white;
     overflow: hidden;
     z-index: 2;
-    clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%); /* Наклонная линия */
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%); /* Slanted line */
 }
-
 .hero::before {
     content: "";
     position: absolute;
@@ -104,7 +1101,6 @@ html, body {
     background-position: center;
     z-index: 1;
 }
-
 .hero::after {
     content: "";
     position: absolute;
@@ -113,7 +1109,6 @@ html, body {
     z-index: 1;
     clip-path: inherit;
 }
-
 .hero-content {
     position: relative;
     z-index: 2;
@@ -184,7 +1179,6 @@ html, body {
     justify-content: center;
     align-items: center;
 }
-
 .about-welcome {
     font-family: 'Poppins', sans-serif;
     color: #5D4037;
@@ -195,7 +1189,6 @@ html, body {
     opacity: 0;
     animation: fadeInRight 0.8s ease-out 0.2s forwards;
 }
-
 .about-title {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
@@ -206,7 +1199,6 @@ html, body {
     opacity: 0;
     animation: fadeInRight 0.8s ease-out 0.4s forwards;
 }
-
 .about-text {
     font-family: 'Poppins', sans-serif;
     font-size: 1.1rem;
@@ -218,7 +1210,6 @@ html, body {
     opacity: 0;
     animation: fadeInRight 0.8s ease-out 0.6s forwards;
 }
-
 .about-image {
     width: 200px;
     height: 200px;
@@ -230,7 +1221,6 @@ html, body {
     opacity: 0;
     animation: scaleIn 0.9s ease-out 0.8s forwards;
 }
-
 .about-caption {
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
@@ -240,13 +1230,11 @@ html, body {
     opacity: 0;
     animation: fadeInRight 0.8s ease-out 1s forwards;
 }
-
 .social-icons {
     gap: 1.8rem;
     opacity: 0;
     animation: fadeInRight 0.8s ease-out 1.2s forwards;
 }
-
 .social-icons span {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
@@ -256,7 +1244,6 @@ html, body {
     transition: all 0.3s ease;
     text-shadow: none;
 }
-
 .social-icons span:hover {
     color: #bfa880;
     transform: translateY(-3px);
@@ -378,7 +1365,7 @@ html, body {
     color: #f3e9d2;
 }
 
-/* --- Адаптивность (Убрал ::before, т.к. он мешал) --- */
+/* --- Responsive (Mobile) --- */
 @media (max-width: 992px) {
     .hero {
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
@@ -399,59 +1386,71 @@ html, body {
     .btn-menu, .btn-book {
         width: 200px;
     }
+
+    .chef-container {
+        flex-direction: column;
+    }
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+    .waiter-view {
+        flex-direction: column;
+    }
+    .active-orders-column {
+        height: auto;
+    }
+}
+@media (max-width: 600px) {
+    .profile-card {
+        grid-template-columns: 1fr;
+    }
 }
 
+
+/* ===============================================
+    AUTH VIEW STYLES (Fixed)
+===============================================
+*/
 .auth-view {
     background-image:
-            linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
-            url("static/images/restaurant-bg.jpg");
+            linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+            url("/images/restaurant-bg.jpg");
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-
     min-height: 100vh;
 }
-
-
 .auth-container {
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 450px; /* Фиксированная ширина для формы */
-    overflow: hidden; /* Скрывает формы при переключении */
-
-    /* Анимация появления */
+    max-width: 450px;
+    overflow: hidden;
     animation: scaleIn 0.5s ease-out;
 }
-
 .auth-form {
     padding: 2.5rem 3rem;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem; /* Расстояние между полями */
+    gap: 1.25rem;
 }
-
 .auth-title {
     font-family: 'Playfair Display', serif;
     font-size: 2.2rem;
     font-weight: 700;
-    color: #5D4037; /* Коричневый */
+    color: #5D4037; /* Brown */
     margin: 0;
     text-align: center;
 }
-
 .auth-subtitle {
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
     font-weight: 400;
-    color: #6d4c41; /* Светло-коричневый */
-    margin: -1rem 0 0.5rem 0; /* Прижимаем к заголовку */
+    color: #6d4c41; /* Light brown */
+    margin: -1rem 0 0.5rem 0;
     text-align: center;
 }
-
-/* Стилизация полей ввода Vaadin */
 .auth-input {
     width: 100%;
 }
@@ -462,7 +1461,7 @@ html, body {
     font-size: 0.9rem;
 }
 .auth-input::part(input-field) {
-    background-color: #fdfdfa; /* Очень светло-бежевый */
+    background-color: #fdfdfa; /* Light beige */
     border-radius: 8px;
     border: 1px solid #e0e0e0;
     transition: all 0.3s ease;
@@ -471,13 +1470,10 @@ html, body {
     border-color: #5D4037;
     box-shadow: 0 0 0 2px rgba(93, 64, 55, 0.1);
 }
-
-/* Стилизация главной кнопки */
 .auth-btn {
     width: 100%;
-    /* Используем переменные Vaadin Lumo для темизации */
-    --lumo-primary-color: #5D4037; /* Коричневый фон */
-    --lumo-primary-text-color: #ffffff; /* Белый текст */
+    --lumo-primary-color: #5D4037; /* Brown bg */
+    --lumo-primary-text-color: #ffffff; /* White text */
     font-weight: 600;
     border-radius: 8px;
     padding: 0.8rem;
@@ -485,28 +1481,99 @@ html, body {
     transition: background-color 0.3s ease;
 }
 .auth-btn:hover {
-    --lumo-primary-color: #795548; /* Коричневый посветлее */
+    --lumo-primary-color: #795548; /* Lighter brown */
 }
-
-/* Стилизация кнопки-ссылки */
 .auth-link {
     width: 100%;
     text-align: center;
-    --lumo-tertiary-text-color: #6d4c41; /* Коричневый */
+    --lumo-tertiary-text-color: #6d4c41; /* Brown */
     font-size: 0.9rem;
 }
 .auth-link:hover {
     --lumo-tertiary-text-color: #3b3b3b;
 }
-/* src/main/frontend/shared-styles.css */
-
-/* ... (все твои существующие стили .hero, .about-section, .gallery-grid... остаются здесь) ... */
-
-/* ... (все твои существующие стили .hero, .about-section, .gallery-grid... остаются здесь) ... */
 
 
 /* ===============================================
-    (НОВЫЕ СТИЛИ!) ДЛЯ СТРАНИЦЫ ШЕФА (ChefView)
+    ADMIN PANEL STYLES
+===============================================
+*/
+.admin-view {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+.admin-view h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: #5D4037;
+    text-align: center;
+}
+.admin-tabs {
+    margin-bottom: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 0.5rem;
+}
+.admin-tabs vaadin-tab {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #6d4c41;
+}
+.admin-tabs vaadin-tab[selected] {
+    color: #5D4037;
+}
+.admin-tabs::part(indicator) {
+    background-color: #5D4037;
+    height: 3px;
+}
+.admin-content {
+    width: 100%;
+}
+.admin-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #5D4037;
+    border-bottom: 2px solid #f3e9d2;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+.admin-grid {
+    height: 400px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+.dish-form {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 2rem;
+    height: fit-content;
+}
+.dish-form h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: #5D4037;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.dish-form > * {
+    width: 100%;
+    margin-bottom: 1rem;
+    --lumo-primary-color: #5D4037;
+}
+.dish-form vaadin-horizontal-layout {
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+}
+
+
+/* ===============================================
+    CHEF VIEW STYLES
 ===============================================
 */
 .chef-view {
@@ -555,15 +1622,13 @@ html, body {
     line-height: 1.7;
     color: #6d4c41;
 }
-
-/* (ИЗМЕНЕНИЕ!) Галерея шефа */
 .chef-gallery-section {
     width: 100%;
     max-width: 1200px;
-    margin: 4rem auto 0 auto; /* Добавил 'auto' для центрирования */
+    margin: 4rem auto 0 auto;
     padding: 0;
     box-sizing: border-box;
-    overflow: hidden; /* Для анимации */
+    overflow: hidden;
 }
 .chef-gallery-section h2 {
     font-family: 'Playfair Display', serif;
@@ -573,23 +1638,16 @@ html, body {
     margin-bottom: 2rem;
 }
 .chef-gallery-grid {
-    /* (ИЗМЕНЕНИЕ!) Используем Grid вместо Flex */
     display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 колонки */
-    grid-template-rows: 250px 250px; /* 2 ряда */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 250px 250px;
     gap: 1.5rem;
     width: 100%;
-
-    /* Этот макет сделает 1-е фото высоким (tall),
-      а 2-е и 3-е будут рядом с ним
-    */
     grid-template-areas:
         "tall photo-2"
         "tall photo-3";
 }
-
 .chef-gallery-item {
-    /* (ИЗМЕНЕНИЕ!) Убрали фикс. ширину/высоту, сетка решает */
     width: 100%;
     height: 100%;
     border-radius: 12px;
@@ -598,8 +1656,6 @@ html, body {
     animation: slideInFromBottom 0.7s ease-out;
     animation-fill-mode: backwards;
 }
-
-/* (НОВОЕ!) Расставляем фото по сетке */
 .chef-gallery-item:nth-child(1) {
     grid-area: tall;
     animation-delay: 0.1s;
@@ -612,8 +1668,6 @@ html, body {
     grid-area: photo-3;
     animation-delay: 0.3s;
 }
-
-
 .chef-gallery-image {
     width: 100%;
     height: 100%;
@@ -621,12 +1675,12 @@ html, body {
     transition: transform 0.4s ease;
 }
 .chef-gallery-item:hover .chef-gallery-image {
-    transform: scale(1.1); /* Красивый зум при наведении */
+    transform: scale(1.1);
 }
 
 
 /* ===============================================
-    (НОВЫЕ СТИЛИ!) ДЛЯ СТРАНИЦЫ МЕНЮ (MenuView)
+    MENU VIEW STYLES
 ===============================================
 */
 .menu-view {
@@ -644,48 +1698,40 @@ html, body {
     text-align: center;
     margin-bottom: 2rem;
 }
-
-/* (НОВОЕ!) Стили для фильтров */
 .menu-filters {
-    background-color: #f3e9d2; /* Бежевый фон */
-    border-radius: 50px; /* Закругленная форма как на фото */
+    background-color: #f3e9d2;
+    border-radius: 50px;
     padding: 0.5rem;
     margin-bottom: 3rem;
 }
 .menu-filters vaadin-tab {
-    color: #5D4037; /* Коричневый текст */
+    color: #5D4037;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
 }
-/* "Таблетка" для выбранной вкладки */
 .menu-filters vaadin-tab[selected] {
-    background-color: #ffffff; /* Белый фон */
-    color: #3b3b3b; /* Темный текст */
+    background-color: #ffffff;
+    color: #3b3b3b;
     border-radius: 40px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 .menu-filters vaadin-tabs::part(indicator) {
-    display: none; /* Убираем стандартный индикатор */
+    display: none;
 }
-
-/* (НОВОЕ!) Сетка для карточек блюд */
 .menu-grid {
     display: grid;
     width: 100%;
-    /* 2 колонки на ПК, 1 на мобильных */
     grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
     gap: 1.5rem;
     margin-bottom: 3rem;
 }
-
-/* (НОВОЕ!) Стили для карточки блюда */
 .dish-card {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
-    overflow: hidden; /* Обрезаем картинку по рамке */
-    animation: scaleIn 0.5s ease-out; /* Анимация появления */
+    overflow: hidden;
+    animation: scaleIn 0.5s ease-out;
 }
 .dish-card:hover {
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
@@ -725,22 +1771,9 @@ html, body {
     margin-top: 0.5rem;
 }
 
-/* Адаптивность для карточек меню */
-@media (max-width: 992px) {
-    /* ... (твой .hero, .about-section @media... остается здесь) ... */
-
-    .chef-container {
-        flex-direction: column;
-    }
-    .menu-grid {
-        grid-template-columns: 1fr; /* 1 колонка на мобильных */
-    }
-}
-/* ... (все твои существующие стили .hero, .about-section, .gallery-grid... остаются здесь) ... */
-
 
 /* ===============================================
-    (НОВЫЕ СТИЛИ!) ДЛЯ СТРАНИЦЫ 'ABOUT'
+    ABOUT VIEW STYLES
 ===============================================
 */
 .about-view {
@@ -748,8 +1781,8 @@ html, body {
     padding: 3rem;
     box-sizing: border-box;
     display: flex;
-    align-items: center; /* Центрируем .about-container */
-    min-height: calc(100vh - 80px); /* 100% высоты минус навбар */
+    align-items: center;
+    min-height: calc(100vh - 80px);
 }
 .about-container {
     display: flex;
@@ -760,7 +1793,7 @@ html, body {
     align-items: center;
 }
 .about-info {
-    flex: 1.5; /* Больше места для текста */
+    flex: 1.5;
 }
 .about-info h1 {
     font-family: 'Playfair Display', serif;
@@ -786,18 +1819,19 @@ html, body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
+
 /* ===============================================
-    (НОВЫЕ СТИЛИ!) ДЛЯ СТРАНИЦЫ 'RESERVATIONS'
+    RESERVATIONS VIEW STYLES
 ===============================================
 */
 .reservation-view {
     width: 100%;
-    max-width: 800px; /* Делаем форму не слишком широкой */
+    max-width: 800px;
     margin: 0 auto;
     padding: 3rem 1rem;
     box-sizing: border-box;
     background: #ffffff;
-    min-height: calc(100vh - 80px); /* 100% высоты минус навбар */
+    min-height: calc(100vh - 80px);
 }
 .reservation-view h1 {
     font-family: 'Playfair Display', serif;
@@ -814,14 +1848,13 @@ html, body {
 }
 .reservation-form {
     width: 100%;
-    background: #fdfdfa; /* Светло-бежевый */
+    background: #fdfdfa;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
-/* Стилизуем все поля Vaadin внутри формы */
 .reservation-form > * {
-    --lumo-primary-color: #5D4037; /* Коричневый цвет для фокуса */
+    --lumo-primary-color: #5D4037;
 }
 .reservation-form vaadin-date-picker,
 .reservation-form vaadin-time-picker,
@@ -830,64 +1863,197 @@ html, body {
     width: 100%;
 }
 
-/* Адаптивность для 'About' */
-@media (max-width: 992px) {
-    /* ... (твой .hero, .about-section @media... остается здесь) ... */
 
-    .about-container {
-        flex-direction: column; /* Текст над картинкой */
-    }
+/* ===============================================
+    PROFILE VIEW STYLES
+===============================================
+*/
+.profile-view {
+    width: 100%;
+    max-width: 900px; /* Centered layout */
+    margin: 0 auto; /* Centered layout */
+    padding: 2rem;
+    box-sizing: border-box;
+    background: #fdfdfa;
 }
-
-                       /* ===============================================
-                           (НОВЫЕ СТИЛИ!) ДЛЯ АДМИН ПАНЕЛИ (AdminView)
-                       ===============================================
-                       */
-                   .admin-view {
-                       width: 100%;
-                       max-width: 1200px;
-                       margin: 0 auto;
-                       padding: 2rem;
-                       box-sizing: border-box;
-                   }
-.admin-view h1 {
+.profile-view h1 {
     font-family: 'Playfair Display', serif;
     font-size: 3rem;
     color: #5D4037;
     text-align: center;
-}
-.admin-tabs {
     margin-bottom: 2rem;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    padding: 0.5rem;
 }
-.admin-tabs vaadin-tab {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    color: #6d4c41;
-}
-.admin-tabs vaadin-tab[selected] {
-    color: #5D4037;
-}
-.admin-tabs::part(indicator) {
-    background-color: #5D4037;
-    height: 3px;
-}
-.admin-content {
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
     width: 100%;
 }
-.admin-section-title {
+.profile-section {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+.profile-section h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 2.2rem;
+    font-size: 2rem;
     color: #5D4037;
     border-bottom: 2px solid #f3e9d2;
     padding-bottom: 0.5rem;
     margin-top: 0;
+    margin-bottom: 1.5rem;
 }
-.admin-grid {
-    height: 400px; /* Ограничиваем высоту грида */
+.profile-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 1.5rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+.profile-row {
+    align-items: center;
+    gap: 1rem;
+}
+.profile-row vaadin-icon {
+    color: #bfa880;
+    width: 24px;
+    height: 24px;
+}
+.profile-row .profile-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #5D4037;
+    display: block;
+}
+.profile-row .profile-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    color: #3b3b3b;
+    display: block;
+}
+.profile-order-history-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 3rem;
+    background: #fff;
+    border-radius: 12px;
+    border: 2px dashed #e0e0e0;
+    color: #888;
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+}
+.profile-order-history-placeholder vaadin-icon {
+    width: 32px;
+    height: 32px;
+    color: #aaa;
+}
+.reservation-grid {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid #f0f0f0;
+}
+
+/* ===============================================
+    WAITER VIEW STYLES
+===============================================
+*/
+.waiter-view {
+    background-color: #fdfdfa;
+}
+.active-orders-column {
+    padding: 2rem;
+    box-sizing: border-box;
+    gap: 1.5rem;
+    overflow-y: auto;
+}
+.active-orders-column h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #5D4037;
+    margin: 0;
+}
+.order-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    border-left: 5px solid #aaa;
+}
+.order-card.preparing {
+    border-left-color: #f39c12;
+}
+.order-card.ready {
+    border-left-color: #2ecc71;
+}
+.order-card.served {
+    border-left-color: #3498db;
+}
+.order-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #5D4037;
+    margin: 0;
+}
+.order-card .order-status-badge {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    color: #fff;
+}
+.order-card.preparing .order-status-badge { background-color: #f39c12; }
+.order-card.ready .order-status-badge { background-color: #2ecc71; }
+.order-card.served .order-status-badge { background-color: #3498db; }
+.order-form {
+    background: #ffffff;
+    border-left: 1px solid #e0e0e0;
+    box-shadow: -10px 0 20px rgba(0,0,0,0.03);
+    padding: 2rem;
+}
+.order-form h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: #5D4037;
+    margin: 0 0 1rem 0;
+}
+.current-order-list {
+    background-color: #fdfdfa;
+    border-radius: 8px;
+    padding: 1rem;
+    min-height: 100px;
+}
+/* ... (все твои существующие стили .admin-view, .dish-form... остаются здесь) ... */
+
+
+/* ===============================================
+    (НОВЫЕ СТИЛИ!) ДЛЯ ЗАГРУЗКИ ФОТО (DishForm)
+===============================================
+*/
+.dish-preview-image {
+    width: 100%;
+    height: 200px; /* Фиксированная высота для превью */
+    object-fit: cover; /* Масштабирует и обрезает, чтобы заполнить */
     border-radius: 8px;
     border: 1px solid #e0e0e0;
+    margin-top: 0.5rem;
+}
+
+.dish-image-upload {
+    width: 100%;
+}
+.dish-image-upload vaadin-upload-file-list {
+    display: none; /* Прячем стандартный список файлов */
 }
