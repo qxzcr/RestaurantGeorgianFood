@@ -1,13 +1,14 @@
-// src/main/java/com/example/restaurant/ui/ReservationForm.java
 package com.example.restaurant.ui;
 
 import com.example.restaurant.model.Reservation;
+import com.example.restaurant.model.User;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
@@ -18,61 +19,66 @@ import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
-/**
- * A form for editing Reservation details.
- * Reuses the .dish-form CSS style from shared-styles.css
- */
 public class ReservationForm extends FormLayout {
 
-    // --- Fields ---
     H2 title = new H2("Edit Reservation");
-    TextField fullName = new TextField("Name on Booking");
+
+    // (ИЗМЕНЕНИЕ!) Выпадающий список вместо текстового поля
+    ComboBox<User> user = new ComboBox<>("Select Customer");
+
+    // Телефон только для чтения (заполняется автоматически)
     TextField phone = new TextField("Phone");
+
     DatePicker reservationDate = new DatePicker("Date");
     TimePicker reservationTime = new TimePicker("Time");
     IntegerField guestCount = new IntegerField("Guests");
 
-    // --- Binder ---
     Binder<Reservation> binder = new BeanValidationBinder<>(Reservation.class);
 
-    // --- Buttons ---
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
-    public ReservationForm() {
-        addClassName("dish-form"); // Reuse the .dish-form style
+    // (ВАЖНО!) Конструктор теперь принимает список пользователей
+    public ReservationForm(List<User> allUsers) {
+        addClassName("dish-form");
 
-        // Configure fields
+        // Настройка ComboBox
+        user.setItems(allUsers);
+        user.setItemLabelGenerator(User::getFullName);
+        user.addValueChangeListener(e -> {
+            if (e.getValue() != null) {
+                // Авто-заполнение телефона
+                phone.setValue(e.getValue().getPhone() != null ? e.getValue().getPhone() : "");
+            }
+        });
+
+        phone.setReadOnly(true);
         reservationDate.setMin(LocalDate.now());
         reservationTime.setMin(LocalTime.parse("11:00"));
         reservationTime.setMax(LocalTime.parse("22:00"));
         guestCount.setMin(1);
 
-        // Bind fields to Reservation properties
         binder.bindInstanceFields(this);
 
-        add(title, fullName, phone, reservationDate, reservationTime, guestCount, createButtonLayout());
+        add(title, user, phone, reservationDate, reservationTime, guestCount, createButtonLayout());
     }
-
-    // --- Public Methods ---
 
     public void setReservation(Reservation reservation) {
         binder.setBean(reservation);
 
         if (reservation != null) {
             setVisible(true);
-            fullName.focus();
-            delete.setVisible(reservation.getId() != null); // Show delete only for existing items
+            delete.setVisible(reservation.getId() != null);
         } else {
             setVisible(false);
         }
     }
-
-    // --- Private Helpers ---
 
     private Component createButtonLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -92,12 +98,17 @@ public class ReservationForm extends FormLayout {
 
     private void validateAndSave() {
         if (binder.isValid()) {
-            fireEvent(new SaveEvent(this, binder.getBean()));
+            // Копируем данные из User в текстовые поля брони (для удобства отображения в Grid)
+            Reservation res = binder.getBean();
+            if (res.getUser() != null) {
+                res.setFullName(res.getUser().getFullName());
+                res.setPhone(res.getUser().getPhone());
+            }
+            fireEvent(new SaveEvent(this, res));
         }
     }
 
-    // --- Custom Events ---
-
+    // --- Events ---
     public static abstract class ReservationFormEvent extends ComponentEvent<ReservationForm> {
         private final Reservation reservation;
         protected ReservationFormEvent(ReservationForm source, Reservation reservation) {
@@ -106,21 +117,16 @@ public class ReservationForm extends FormLayout {
         }
         public Reservation getReservation() { return reservation; }
     }
-
     public static class SaveEvent extends ReservationFormEvent {
         SaveEvent(ReservationForm source, Reservation reservation) { super(source, reservation); }
     }
-
     public static class DeleteEvent extends ReservationFormEvent {
         DeleteEvent(ReservationForm source, Reservation reservation) { super(source, reservation); }
     }
-
     public static class CloseEvent extends ReservationFormEvent {
         CloseEvent(ReservationForm source) { super(source, null); }
     }
-
-    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
-                                                                  ComponentEventListener<T> listener) {
+    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType, ComponentEventListener<T> listener) {
         return getEventBus().addListener(eventType, listener);
     }
 }
