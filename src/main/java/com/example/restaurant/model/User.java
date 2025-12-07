@@ -97,7 +97,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "users")
 // (ВОТ ИСПРАВЛЕНИЕ!) Заменяем @Data
@@ -131,12 +131,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private List<Reservation> reservations;
 
     // (Добавляем связь для Панели Официанта)
     @OneToMany(mappedBy = "waiter")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonIgnore
+
     private List<Order> createdOrders;
 
 

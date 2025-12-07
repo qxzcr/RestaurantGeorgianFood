@@ -1,14 +1,18 @@
-// src/main/java/com/example/restaurant/repository/ReservationRepository.java
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Reservation;
 import com.example.restaurant.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    // This method will find all reservations for a specific user
+    // Найти все брони конкретного пользователя
     List<Reservation> findByUser(User user);
+
+    // (НОВОЕ!) Считаем количество броней на конкретную дату и время
+    int countByReservationDateAndReservationTime(LocalDate date, LocalTime time);
 }

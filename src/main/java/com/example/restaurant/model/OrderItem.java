@@ -1,8 +1,6 @@
 // src/main/java/com/example/restaurant/model/OrderItem.java
 package com.example.restaurant.model;
-
-// (HERE IS THE FIX!)
-// Make sure you import YOUR Order class, not the Hilla one
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.example.restaurant.model.Order;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,6 +25,7 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Order order; // This now correctly refers to com.example.restaurant.model.Order
 
     // The dish that was ordered
