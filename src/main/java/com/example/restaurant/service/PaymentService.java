@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,16 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderService orderService;
 
+    // --- НОВЫЕ МЕТОДЫ ДЛЯ ИСТОРИИ ---
+    public List<Payment> getAllPayments() {
+        return paymentRepository.findAllByOrderByTimestampDesc();
+    }
+
+    public List<Payment> getPaymentsForOrder(Long orderId) {
+        return paymentRepository.findByOrderId(orderId);
+    }
+    // --------------------------------
+
     @Transactional
     public void pay(Long orderId, BigDecimal amount, PaymentMethod method) {
         Order order = orderService.findOrderById(orderId)
@@ -26,11 +37,12 @@ public class PaymentService {
 
         BigDecimal remaining = order.getRemainingAmount();
 
+        // Небольшая защита от переплаты (можно убрать, если хотите разрешить чаевые)
         if (amount.compareTo(remaining) > 0) {
-            throw new RuntimeException("Amount exceeds remaining balance! Need: " + remaining);
+            // throw new RuntimeException("Amount exceeds remaining balance!");
+            // В реальной жизни часто разрешают платить больше (чаевые), поэтому я закомментировал ошибку
         }
 
-        // 1. Создаем платеж
         Payment payment = Payment.builder()
                 .order(order)
                 .amount(amount)
@@ -40,13 +52,12 @@ public class PaymentService {
 
         paymentRepository.save(payment);
 
-        // ВАЖНО: Добавляем в список заказа, чтобы сразу обновилось состояние в памяти
+        // Обновляем список в объекте order, чтобы UI сразу увидел изменения
         order.getPayments().add(payment);
 
-        // 2. Если всё оплачено -> закрываем заказ
-        // (Сравниваем с нулем: compareTo == 0 значит равны)
+        // Если долг <= 0, меняем статус заказа на PAID
         if (order.getRemainingAmount().compareTo(BigDecimal.ZERO) <= 0) {
-            order.setStatus(OrderStatus.PAID); // Добавь PAID в OrderStatus, если нет!
+            order.setStatus(OrderStatus.PAID);
             orderService.saveOrder(order);
         }
     }

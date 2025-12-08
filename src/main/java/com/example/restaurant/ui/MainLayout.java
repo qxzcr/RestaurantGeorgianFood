@@ -36,53 +36,63 @@ public class MainLayout extends AppLayout {
         this.notificationService = notificationService;
         createHeader();
     }
-
     private void createHeader() {
-        // App Title
+        // 1. Logo (left)
         H1 logoTitle = new H1(getTranslation("app.title", "Kinto"));
         logoTitle.addClassName("nav-title");
+        logoTitle.getStyle().set("margin", "0");
+        logoTitle.getStyle().set("font-size", "1.5em");
+        // Prevent the logo from shrinking
+        logoTitle.getStyle().set("flex-shrink", "0");
 
-        // --- LEFT SIDE ---
-        HorizontalLayout leftSide = new HorizontalLayout(logoTitle);
-        leftSide.setAlignItems(FlexComponent.Alignment.CENTER);
-
-        // --- RIGHT SIDE ---
-
-        // 1. Navigation
+        // 2. Navigation (center)
         Tabs navTabs = createNavigation();
 
-        // 2. Language Switcher (Refactored to separate method)
+        // --- FIXES ---
+        // 1. Removed setWidthFull() so tabs take only the space they need
+        // navTabs.setWidthFull(); // removed
+
+        // 2. Add left margin to push the navigation away from the logo
+        navTabs.getStyle().set("margin-left", "40px");
+
+        // 3. Allow scrolling if there are many tabs to avoid layout breaking
+        navTabs.getStyle().set("overflow", "auto");
+        navTabs.getStyle().set("max-width", "100%");
+
+        // 3. Control buttons (right)
         Select<Locale> languageSelect = createLanguageSwitcher();
-
-        // 3. Notification Button
         Button notificationButton = createNotificationButton();
-
-        // 4. Login/Logout Button
         Button loginLogoutButton = createLoginLogoutButton();
 
-        HorizontalLayout rightSide = new HorizontalLayout(
-                navTabs,
-                languageSelect
-        );
+        HorizontalLayout controlsLayout = new HorizontalLayout();
+        controlsLayout.add(languageSelect);
 
         if (notificationButton != null) {
-            rightSide.add(notificationButton);
+            controlsLayout.add(notificationButton);
         }
 
-        rightSide.add(loginLogoutButton);
+        controlsLayout.add(loginLogoutButton);
 
-        rightSide.setAlignItems(FlexComponent.Alignment.CENTER);
-        rightSide.setSpacing(true);
+        controlsLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        controlsLayout.setSpacing(true);
+        // Keep control buttons aligned to the right and prevent shrinking
+        controlsLayout.setFlexGrow(0);
+        controlsLayout.getStyle().set("margin-left", "auto"); // pushes controls to the far right
 
-        // --- CONTAINER ---
-        HorizontalLayout header = new HorizontalLayout(leftSide, rightSide);
+        // --- MAIN HEADER CONTAINER ---
+        HorizontalLayout header = new HorizontalLayout(logoTitle, navTabs, controlsLayout);
+
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidth("100%");
         header.addClassName("nav-container");
-        header.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+
+        // Important: expand(navTabs) makes the tab block take all available space between logo and buttons.
+        // The margin-left inside navTabs visually shifts the tab text.
+        header.expand(navTabs);
 
         addToNavbar(header);
     }
+
 
     /**
      * Extracted method for Language Switcher logic
@@ -129,13 +139,16 @@ public class MainLayout extends AppLayout {
             if (role == Role.WAITER || role == Role.ADMIN) {
                 tabs.add(createTab(new RouterLink(getTranslation("nav.book", "Book a Table"), ReservationView.class)));
                 tabs.add(createTab(new RouterLink(getTranslation("nav.orders", "Orders"), WaiterView.class)));
+
+                // --- NEW PAYMENTS LINK ---
+                tabs.add(createTab(new RouterLink("Payments", PaymentView.class)));
             }
 
             // 4. Kitchen Access & Schedule
             if (role == Role.CHEF || role == Role.WAITER || role == Role.ADMIN) {
                 tabs.add(createTab(new RouterLink("Kitchen (KDS)", KitchenView.class)));
-                // NEW LINK
-                tabs.add(createTab(new RouterLink("Schedule", ScheduleView.class)));
+                // NEW LINK - Fixed name to ShiftView
+                tabs.add(createTab(new RouterLink("Schedule", ShiftView.class)));
             }
 
             if (role == Role.ADMIN || role == Role.INVENTORY_MANAGER) {
@@ -230,7 +243,6 @@ public class MainLayout extends AppLayout {
         });
         dialog.getFooter().add(close);
 
-        // This Div now works correctly because of the import
         Div listContainer = new Div(list);
         listContainer.getStyle().set("max-height", "400px");
         listContainer.getStyle().set("overflow-y", "auto");

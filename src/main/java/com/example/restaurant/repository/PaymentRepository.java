@@ -2,8 +2,13 @@ package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-@Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
+
+    // Найти все платежи, сортируя от новых к старым
+    List<Payment> findAllByOrderByTimestampDesc();
+
+    // Найти платежи для конкретного заказа (пригодится для диалогового окна)
+    List<Payment> findByOrderId(Long orderId);
 }

@@ -10,6 +10,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant; // Добавлено для красивых полосок
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -45,23 +46,34 @@ public class ShiftView extends VerticalLayout {
 
         // Настройка таблицы
         shiftGrid = new Grid<>(Shift.class, false);
+        shiftGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES); // Полосатые строки для удобства
 
-        // Колонки данных
-        shiftGrid.addColumn(shift -> shift.getEmployee().getName()).setHeader("Employee");
-        shiftGrid.addColumn(shift -> shift.getEmployee().getRole()).setHeader("Role");
+        // Колонки данных (добавлено setAutoWidth для авто-подбора ширины)
+        shiftGrid.addColumn(shift -> shift.getEmployee().getName())
+                .setHeader("Employee")
+                .setAutoWidth(true);
+
+        shiftGrid.addColumn(shift -> shift.getEmployee().getRole())
+                .setHeader("Role")
+                .setAutoWidth(true);
 
         // Красивый формат даты
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM HH:mm");
 
-        // ИСПРАВЛЕНИЕ: Используем простое форматирование вместо LocalDateTimeRenderer
         shiftGrid.addColumn(s -> s.getStartTime() != null ? formatter.format(s.getStartTime()) : "")
-                .setHeader("Start Time");
-        shiftGrid.addColumn(s -> s.getEndTime() != null ? formatter.format(s.getEndTime()) : "")
-                .setHeader("End Time");
+                .setHeader("Start Time")
+                .setAutoWidth(true);
 
-        shiftGrid.addColumn(Shift::getNotes).setHeader("Notes");
+        shiftGrid.addColumn(s -> s.getEndTime() != null ? formatter.format(s.getEndTime()) : "")
+                .setHeader("End Time")
+                .setAutoWidth(true);
+
+        shiftGrid.addColumn(Shift::getNotes)
+                .setHeader("Notes")
+                .setAutoWidth(true);
 
         // КОЛОНКА ДЕЙСТВИЙ (Edit / Delete)
+        // setFlexGrow(0) и setWidth не дают колонке сжиматься
         shiftGrid.addComponentColumn(shift -> {
             // Кнопка Редактировать
             Button editBtn = new Button(VaadinIcon.EDIT.create(), e -> openShiftDialog(shift));
@@ -76,7 +88,7 @@ public class ShiftView extends VerticalLayout {
             deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
 
             return new HorizontalLayout(editBtn, deleteBtn);
-        }).setHeader("Actions");
+        }).setHeader("Actions").setWidth("150px").setFlexGrow(0); // Фиксированная ширина для кнопок
 
         add(addShiftBtn, shiftGrid);
         refresh();
@@ -95,7 +107,7 @@ public class ShiftView extends VerticalLayout {
         employeeSelect.setItems(userService.findAll());
         employeeSelect.setItemLabelGenerator(u -> u.getName() + " (" + u.getRole() + ")");
 
-        // Если редактируем, блокируем смену сотрудника (опционально) или просто ставим текущего
+        // Заполняем поле сотрудника, если редактируем
         if (shift.getEmployee() != null) {
             employeeSelect.setValue(shift.getEmployee());
         }
@@ -135,6 +147,7 @@ public class ShiftView extends VerticalLayout {
                 Notification.show("Error: " + ex.getMessage());
             }
         });
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button cancel = new Button("Cancel", e -> dialog.close());
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
