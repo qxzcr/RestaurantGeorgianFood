@@ -106,11 +106,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void saveUser(User user, String rawPassword) {
+    public User saveUser(User user, String rawPassword) {
         if (rawPassword != null && !rawPassword.isBlank()) {
             user.setPassword(passwordEncoder.encode(rawPassword));
         }
         userRepository.save(user);
+        return user;
     }
 
     // (NEW) For Import

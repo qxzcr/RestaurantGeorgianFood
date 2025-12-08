@@ -1,14 +1,15 @@
 package com.example.restaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*; // <-- (FIX!)
+import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.List; // <-- (FIX!)
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+
 @Entity
 @Table(name = "dishes")
-// (FIX!) We replace @Data to prevent infinite loops
+// Use Getter/Setter instead of Data to prevent infinite loops with relationships
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,11 +36,25 @@ public class Dish {
     @Column(nullable = false)
     private DishCategory category;
 
-    // (FIX!) Add the other side of the Order relationship
+    // Relationship to OrderItem (Inverse side)
     @OneToMany(mappedBy = "dish")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     private List<OrderItem> orderItems;
 
+    // --- NEW: Relationship to Ingredients (Recipe) ---
+    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Builder.Default
+    private java.util.List<DishIngredient> ingredients = new java.util.ArrayList<>();
+
+    // Helper method to add ingredient easily
+    public void addIngredient(Ingredient ingredient, double quantity) {
+        DishIngredient link = DishIngredient.builder()
+                .dish(this)
+                .ingredient(ingredient)
+                .quantity(quantity)
+                .build();
+        this.ingredients.add(link);
+    }
 }

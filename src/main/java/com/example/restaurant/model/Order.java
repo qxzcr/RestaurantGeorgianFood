@@ -246,4 +246,15 @@ public class Order {
                 .map(OrderItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+    // ...
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private java.util.List<Payment> payments = new java.util.ArrayList<>();
+
+    // Хелпер для подсчета уже оплаченной суммы
+    public java.math.BigDecimal getPaidAmount() {
+        if (payments == null) return java.math.BigDecimal.ZERO;
+        return payments.stream()
+                .map(Payment::getAmount)
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+    }
 }

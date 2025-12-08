@@ -1,40 +1,3 @@
-//// src/main/java/com/example/restaurant/service/OrderService.java
-//package com.example.restaurant.service;
-//
-//import com.example.restaurant.model.Order;
-//import com.example.restaurant.model.OrderStatus;
-//import com.example.restaurant.repository.OrderRepository;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//
-//@Service
-//@RequiredArgsConstructor
-//public class OrderService {
-//
-//    private final OrderRepository orderRepository;
-//
-//    /**
-//     * Finds all orders that are not yet paid.
-//     * @return A list of active (PREPARING, READY, SERVED) orders.
-//     */
-//    public List<Order> getActiveOrders() {
-//        return orderRepository.findByStatusInOrderByCreatedAtDesc(
-//                List.of(OrderStatus.PREPARING, OrderStatus.READY, OrderStatus.SERVED)
-//        );
-//    }
-//
-//    /**
-//     * Saves a new order or updates an existing one.
-//     * @param order The order to save.
-//     * @return The saved order.
-//     */
-//    public Order saveOrder(Order order) {
-//        return orderRepository.save(order);
-//    }
-//}
-// src/main/java/com/example/restaurant/service/OrderService.java
 package com.example.restaurant.service;
 
 import com.example.restaurant.model.Order;
@@ -43,7 +6,10 @@ import com.example.restaurant.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,29 +17,63 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    /**
-     * Finds all orders that are not yet paid.
-     * @return A list of active (PREPARING, READY, SERVED) orders.
-     */
     public List<Order> getActiveOrders() {
         return orderRepository.findByStatusInOrderByCreatedAtDesc(
                 List.of(OrderStatus.PREPARING, OrderStatus.READY, OrderStatus.SERVED)
         );
     }
 
-    /**
-     * Saves a new order or updates an existing one.
-     * @param order The order to save.
-     * @return The saved order.
-     */
+    public Optional<Order> findOrderById(Long id) {
+        return orderRepository.findById(id);
+    }
+
     public Order saveOrder(Order order) {
         return orderRepository.save(order);
     }
 
-    /**
-     * (ВОТ ИСПРАВЛЕНИЕ!) Deletes an order (for Admin Panel).
-     */
     public void deleteOrder(Long orderId) {
         orderRepository.deleteById(orderId);
+    }
+
+    /**
+     * 1. Calculate Revenue for Today
+     */
+    public java.math.BigDecimal getTodayRevenue() {
+        return orderRepository.findAll().stream()
+                .filter(o -> o.getCreatedAt().toLocalDate().isEqual(java.time.LocalDate.now()))
+                // Removed check for CANCELLED since it doesn't exist in your Enum yet
+                .map(Order::getTotalPrice)
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+    }
+
+    /**
+     * 2. Count Orders for Today
+     */
+    public long getTodayOrdersCount() {
+        return orderRepository.findAll().stream()
+                .filter(o -> o.getCreatedAt().toLocalDate().isEqual(java.time.LocalDate.now()))
+                .count();
+    }
+
+    /**
+     * 3. Most Popular Dish (Top Dish)
+     */
+    public String getTopDishName() {
+        List<com.example.restaurant.model.OrderItem> allItems = orderRepository.findAll().stream()
+                .flatMap(o -> o.getItems().stream())
+                .toList();
+
+        if (allItems.isEmpty()) return "N/A";
+
+        Map<String, Integer> dishCounts = new HashMap<>();
+        for (var item : allItems) {
+            String name = item.getDish().getName();
+            dishCounts.put(name, dishCounts.getOrDefault(name, 0) + item.getQuantity());
+        }
+
+        return dishCounts.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("N/A");
     }
 }

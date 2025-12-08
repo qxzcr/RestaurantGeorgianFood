@@ -1,60 +1,3 @@
-////// src/main/java/com/example/restaurant/config/ApiSecurityConfig.java
-////package com.example.restaurant.config;
-////
-////import com.example.restaurant.security.JwtAuthenticationFilter;
-////import lombok.RequiredArgsConstructor;
-////import org.springframework.context.annotation.Bean;
-////import org.springframework.context.annotation.Configuration;
-////import org.springframework.core.annotation.Order;
-////import org.springframework.security.authentication.AuthenticationManager;
-////import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-////import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-////import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-////import org.springframework.security.config.http.SessionCreationPolicy;
-////import org.springframework.security.web.SecurityFilterChain;
-////import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-////
-////@Configuration
-////@RequiredArgsConstructor
-////@Order(1)
-////public class ApiSecurityConfig {
-////
-////    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-////    private final AuthenticationConfiguration authenticationConfiguration;
-////
-////    @Bean
-////    public AuthenticationManager authenticationManager() throws Exception {
-////        return authenticationConfiguration.getAuthenticationManager();
-////    }
-////
-////    @Bean
-////    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
-////        http
-////                // (FIX!) Ensure API security doesn't accidentally block image paths
-////                .securityMatcher("/api/**")
-////                .csrf(AbstractHttpConfigurer::disable)
-////                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-////                .authorizeHttpRequests(auth -> auth
-////                        // (FIX!) Explicitly allow images just in case they fall through
-////                        .requestMatchers("/images/dishes/**").permitAll()
-////
-////                        .requestMatchers("/api/auth/**").permitAll()
-////
-////                        .requestMatchers("/api/export/menu/**").authenticated()
-////                        .requestMatchers("/api/export/users/**").hasRole("ADMIN")
-////                        .requestMatchers("/api/export/reservations/**").hasRole("ADMIN")
-////
-////                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-////                        .requestMatchers("/api/orders/**").hasRole("WAITER")
-////                        .requestMatchers("/api/profile/**").authenticated()
-////                        .anyRequest().authenticated()
-////                )
-////                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-////
-////        return http.build();
-////    }
-////}
-//// src/main/java/com/example/restaurant/config/ApiSecurityConfig.java
 //package com.example.restaurant.config;
 //
 //import com.example.restaurant.security.JwtAuthenticationFilter;
@@ -88,23 +31,19 @@
 //        http
 //                .securityMatcher("/api/**")
 //                .csrf(AbstractHttpConfigurer::disable)
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/images/dishes/**").permitAll()
+//                        // Разрешаем публичный доступ к авторизации и экспорту
 //                        .requestMatchers("/api/auth/**").permitAll()
+//                        .requestMatchers("/api/export/**").permitAll()
 //
-//                        // (ZMIANA!) Menu mogą pobierać wszyscy zalogowani
-//                        .requestMatchers("/api/export/menu/**").authenticated()
+//                        // Разрешаем доступ к новому Management API (для Swagger)
+//                        .requestMatchers("/api/management/**").permitAll()
 //
-//                        // (ZMIANA!) Użytkowników może pobierać tylko ADMIN
-//                        .requestMatchers("/api/export/users/**").hasRole("ADMIN")
-//
-//                        // (ZMIANA!) Rezerwacje mogą pobierać ADMIN i WAITER
-//                        .requestMatchers("/api/export/reservations/**").hasAnyRole("ADMIN", "WAITER")
-//
+//                        // Защита остальных эндпоинтов
 //                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
 //                        .requestMatchers("/api/orders/**").hasRole("WAITER")
 //                        .requestMatchers("/api/profile/**").authenticated()
+//
 //                        .anyRequest().authenticated()
 //                )
 //                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -112,7 +51,6 @@
 //        return http.build();
 //    }
 //}
-// src/main/java/com/example/restaurant/config/ApiSecurityConfig.java
 package com.example.restaurant.config;
 
 import com.example.restaurant.security.JwtAuthenticationFilter;
@@ -124,7 +62,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -146,28 +83,27 @@ public class ApiSecurityConfig {
         http
                 .securityMatcher("/api/**")
                 .csrf(AbstractHttpConfigurer::disable)
-                // (FIX!) We need to allow session-based auth for browser downloads
-                // OR explicitly permit the download URLs if they are public.
-                // Since downloads are for logged-in users, we rely on VaadinSecurityConfig
-                // to handle the session, but if we match /api/** here, we must configure it.
-                // A stateless API config usually blocks browser cookies.
-                //
-                // OPTION: We remove "STATELESS" for export endpoints, or simply
-                // permit them if we handle security in the controller/view.
-                //
-                // For simplicity and to fix the "Permissions missing" error for browser downloads:
-                // Let's allow ALL export endpoints here, assuming Vaadin's views (AdminView/ProfileView)
-                // already protect the buttons from being clicked by unauthorized users.
                 .authorizeHttpRequests(auth -> auth
+                        // 1. Public endpoints (Authentication & Export)
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/export/**").permitAll() // (FIX!) Allow browser to hit these URLs
+                        .requestMatchers("/api/export/**").permitAll()
 
+                        // 2. Swagger Demo Endpoints (Publicly accessible for demonstration)
+                        // In a real production app, these would be protected by roles.
+                        .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/menu/**").permitAll()
+                        .requestMatchers("/api/orders/**").permitAll()
+                        .requestMatchers("/api/reservations/**").permitAll()
+
+                        // 3. Protected endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/orders/**").hasRole("WAITER")
                         .requestMatchers("/api/profile/**").authenticated()
+
+                        .requestMatchers("/api/inventory/**").permitAll() // For Swagger Demo
+                        .requestMatchers("/api/payments/**").permitAll()
+                        // 4. Default rule: everything else requires authentication
                         .anyRequest().authenticated()
                 )
-                // We still keep JWT filter for other API calls
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

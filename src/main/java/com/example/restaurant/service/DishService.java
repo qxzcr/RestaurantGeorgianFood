@@ -1,3 +1,42 @@
+////// src/main/java/com/example/restaurant/service/DishService.java
+////package com.example.restaurant.service;
+////
+////import com.example.restaurant.model.Dish;
+////import com.example.restaurant.model.DishCategory;
+////import com.example.restaurant.repository.DishRepository;
+////import lombok.RequiredArgsConstructor;
+////import org.springframework.stereotype.Service;
+////
+////import java.util.List;
+////
+////@Service
+////@RequiredArgsConstructor
+////public class DishService {
+////
+////    private final DishRepository dishRepository;
+////
+////    public List<Dish> findAllDishes() {
+////        return dishRepository.findAll();
+////    }
+////
+////    public List<Dish> findDishesByCategory(DishCategory category) {
+////        return dishRepository.findByCategory(category);
+////    }
+////
+////    // (NEW!) This is needed for the Admin Panel
+////    public Dish saveDish(Dish dish) {
+////        return dishRepository.save(dish);
+////    }
+////
+////    // (NEW!) This is needed for the Admin Panel
+////    public void deleteDish(Long id) {
+////        if (id == null) {
+////            // Handle error, e.g., throw exception or log
+////            return;
+////        }
+////        dishRepository.deleteById(id);
+////    }
+////}
 //// src/main/java/com/example/restaurant/service/DishService.java
 //package com.example.restaurant.service;
 //
@@ -23,21 +62,19 @@
 //        return dishRepository.findByCategory(category);
 //    }
 //
-//    // (NEW!) This is needed for the Admin Panel
 //    public Dish saveDish(Dish dish) {
 //        return dishRepository.save(dish);
 //    }
 //
-//    // (NEW!) This is needed for the Admin Panel
+//    // (NEW) For Import
+//    public void saveAll(List<Dish> dishes) {
+//        dishRepository.saveAll(dishes);
+//    }
+//
 //    public void deleteDish(Long id) {
-//        if (id == null) {
-//            // Handle error, e.g., throw exception or log
-//            return;
-//        }
 //        dishRepository.deleteById(id);
 //    }
 //}
-// src/main/java/com/example/restaurant/service/DishService.java
 package com.example.restaurant.service;
 
 import com.example.restaurant.model.Dish;
@@ -47,6 +84,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional; // <--- Import
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +96,11 @@ public class DishService {
         return dishRepository.findAll();
     }
 
+    // (NEW) Метод для контроллера
+    public Optional<Dish> findDishById(Long id) {
+        return dishRepository.findById(id);
+    }
+
     public List<Dish> findDishesByCategory(DishCategory category) {
         return dishRepository.findByCategory(category);
     }
@@ -66,7 +109,6 @@ public class DishService {
         return dishRepository.save(dish);
     }
 
-    // (NEW) For Import
     public void saveAll(List<Dish> dishes) {
         dishRepository.saveAll(dishes);
     }

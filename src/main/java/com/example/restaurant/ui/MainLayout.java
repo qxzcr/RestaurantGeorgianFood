@@ -1,8 +1,7 @@
-// src/main/java/com/example/restaurant/ui/MainLayout.java
 package com.example.restaurant.ui;
 
 import com.example.restaurant.model.Role;
-import com.example.restaurant.model.User; // <-- (НОВЫЙ ИМПОРТ)
+import com.example.restaurant.model.User;
 import com.example.restaurant.service.SecurityService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -12,9 +11,12 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
+
+import java.util.Locale;
 
 @CssImport("./shared-styles.css")
 public class MainLayout extends AppLayout {
@@ -27,33 +29,52 @@ public class MainLayout extends AppLayout {
     }
 
     private void createHeader() {
-        H1 logoTitle = new H1("Kinto");
+        // App Title (Translated)
+        H1 logoTitle = new H1(getTranslation("app.title"));
         logoTitle.addClassName("nav-title");
 
         // --- LEFT SIDE ---
-        HorizontalLayout leftSide = new HorizontalLayout(
-                // (Убрали "три полоски")
-                logoTitle
-        );
+        HorizontalLayout leftSide = new HorizontalLayout(logoTitle);
         leftSide.setAlignItems(FlexComponent.Alignment.CENTER);
 
         // --- RIGHT SIDE ---
-        Tabs navTabs = createNavigation(); // <-- (МЕТОД ОБНОВЛЕН!)
+
+        // 1. Navigation
+        Tabs navTabs = createNavigation();
+
+        // 2. Language Switcher (Select Component)
+        Select<Locale> languageSelect = new Select<>();
+        languageSelect.setItems(new Locale("en"), new Locale("pl"));
+
+        // Display "EN" or "PL" in the dropdown
+        languageSelect.setItemLabelGenerator(loc -> loc.getLanguage().toUpperCase());
+
+        // Set current value
+        languageSelect.setValue(UI.getCurrent().getLocale());
+        languageSelect.setWidth("80px");
+
+        // Logic: Switch language and reload page
+        languageSelect.addValueChangeListener(event -> {
+            Locale selectedLocale = event.getValue();
+            if (selectedLocale != null) {
+                UI.getCurrent().getSession().setLocale(selectedLocale);
+                UI.getCurrent().getPage().reload();
+            }
+        });
+
+        // 3. Login/Logout Button
         Button loginLogoutButton = createLoginLogoutButton();
 
         HorizontalLayout rightSide = new HorizontalLayout(
                 navTabs,
+                languageSelect, // <--- Added switcher here
                 loginLogoutButton
         );
         rightSide.setAlignItems(FlexComponent.Alignment.CENTER);
         rightSide.setSpacing(true);
 
-        // --- HEADER CONTAINER ---
-        HorizontalLayout header = new HorizontalLayout(
-                leftSide,
-                rightSide
-        );
-
+        // --- CONTAINER ---
+        HorizontalLayout header = new HorizontalLayout(leftSide, rightSide);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidth("100%");
         header.addClassName("nav-container");
@@ -62,43 +83,37 @@ public class MainLayout extends AppLayout {
         addToNavbar(header);
     }
 
-    // (ВОТ ИЗМЕНЕНИЕ!)
-    // Этот метод теперь показывает разные ссылки в зависимости от роли
     private Tabs createNavigation() {
         Tabs tabs = new Tabs();
         tabs.setSelectedTab(null);
 
-        // Ссылки, которые видят все (даже анонимы)
+        // Using getTranslation for menu items
         tabs.add(
-                createTab(new RouterLink("Home", HomeView.class)),
-                createTab(new RouterLink("Menu", MenuView.class)),
-                createTab(new RouterLink("About", AboutView.class)),
-                createTab(new RouterLink("Chef", ChefView.class))
+                createTab(new RouterLink(getTranslation("nav.home"), HomeView.class)),
+                createTab(new RouterLink(getTranslation("nav.menu"), MenuView.class)),
+                createTab(new RouterLink(getTranslation("nav.about"), AboutView.class)),
+                createTab(new RouterLink(getTranslation("nav.chef"), ChefView.class))
         );
 
-        // Получаем текущего пользователя
         User authenticatedUser = securityService.getAuthenticatedUser();
 
         if (authenticatedUser != null) {
-            // Ссылки, которые видят ВСЕ залогиненные
             tabs.add(
-                    createTab(new RouterLink("Book a Table", ReservationView.class)),
-                    createTab(new RouterLink("My Profile", ProfileView.class))
+                    createTab(new RouterLink(getTranslation("nav.book"), ReservationView.class)),
+                    createTab(new RouterLink(getTranslation("nav.profile"), ProfileView.class))
             );
 
-            // Ссылка только для ОФИЦИАНТА (и Админа)
             if (authenticatedUser.getRole() == Role.WAITER || authenticatedUser.getRole() == Role.ADMIN) {
-                tabs.add(createTab(new RouterLink("Orders", WaiterView.class)));
+                tabs.add(createTab(new RouterLink(getTranslation("nav.orders"), WaiterView.class)));
             }
 
-            // Ссылка только для АДМИНА
             if (authenticatedUser.getRole() == Role.ADMIN) {
-                tabs.add(createTab(new RouterLink("Admin Panel", AdminView.class)));
+                tabs.add(createTab(new RouterLink(getTranslation("nav.admin"), AdminView.class)));
+                // (FIX) ДОБАВЛЕНА ССЫЛКА НА ИНВЕНТАРЬ
+                tabs.add(createTab(new RouterLink(getTranslation("nav.inventory", "Inventory"), InventoryView.class)));
             }
         } else {
-            // Если пользователь не залогинен, показываем "Book a Table" как обычную ссылку
-            // (которая перекинет его на логин, т.к. ReservationView защищена)
-            tabs.add(createTab(new RouterLink("Book a Table", ReservationView.class)));
+            tabs.add(createTab(new RouterLink(getTranslation("nav.book"), ReservationView.class)));
         }
 
         return tabs;
@@ -113,9 +128,9 @@ public class MainLayout extends AppLayout {
     private Button createLoginLogoutButton() {
         Button button;
         if (securityService.getAuthenticatedUser() != null) {
-            button = new Button("Sign Out", e -> securityService.logout());
+            button = new Button(getTranslation("btn.signout"), e -> securityService.logout());
         } else {
-            button = new Button("Sign In", e -> UI.getCurrent().navigate("auth"));
+            button = new Button(getTranslation("btn.signin"), e -> UI.getCurrent().navigate("auth"));
         }
         button.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         button.addClassName("btn-login-logout");
