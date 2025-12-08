@@ -1,134 +1,125 @@
-// src/main/java/com/example/restaurant/RestaurantApplication.java
 package com.example.restaurant;
 
-import com.example.restaurant.model.Dish;
-import com.example.restaurant.model.DishCategory;
-import com.example.restaurant.model.Role; // <-- NEW IMPORT
-import com.example.restaurant.model.User; // <-- NEW IMPORT
+import com.example.restaurant.model.*;
 import com.example.restaurant.repository.DishRepository;
-import com.example.restaurant.service.UserService; // <-- NEW IMPORT
+import com.example.restaurant.repository.IngredientRepository;
+import com.example.restaurant.repository.SupplierRepository;
+import com.example.restaurant.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder; // <-- NEW IMPORT
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 @SpringBootApplication
+@EnableScheduling // Enables the scheduled tasks for inventory alerts
 public class RestaurantApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(RestaurantApplication.class, args);
     }
 
-    /**
-     * This bean runs once on application startup.
-     * It's used to load initial data (seed data) into the database.
-     */
     @Bean
-    public CommandLineRunner loadData(DishRepository dishRepository, // <-- Renamed from 'repository'
-                                      UserService userService,         // <-- NEW DEPENDENCY
-                                      PasswordEncoder passwordEncoder) { // <-- NEW DEPENDENCY
+    public CommandLineRunner loadData(DishRepository dishRepository,
+                                      UserService userService,
+                                      IngredientRepository ingredientRepository,
+                                      SupplierRepository supplierRepository) {
         return args -> {
+            System.out.println(">>> STARTING DATA SEEDING <<<");
 
-            // --- 1. Load Dishes (if database is empty) ---
+            // =============================================================
+            // 1. USERS (Create these FIRST to avoid "User not found" error)
+            // =============================================================
+
+            // --- Admin ---
+            createUserIfNotFound(userService, "admin@kinto.com", "admin", "Admin Kinto", "000000000", Role.ADMIN);
+
+            // --- Waiter ---
+            createUserIfNotFound(userService, "waiter@kinto.com", "waiter", "Kate Blossom", "111111111", Role.WAITER);
+
+            // --- Chef ---
+            createUserIfNotFound(userService, "chef@kinto.com", "chef", "Armani Kitaio", "222222222", Role.CHEF);
+
+            // --- Inventory Manager ---
+            createUserIfNotFound(userService, "manager@kinto.com", "manager", "George Manager", "333333333", Role.INVENTORY_MANAGER);
+
+            // =============================================================
+            // 2. INGREDIENTS (Prevent Foreign Key errors)
+            // =============================================================
+            if (ingredientRepository.count() == 0) {
+                System.out.println(">>> Seeding Ingredients...");
+                ingredientRepository.save(Ingredient.builder().name("Flour").currentStock(50.0).unit("kg").minimumThreshold(10.0).build());
+                ingredientRepository.save(Ingredient.builder().name("Cheese").currentStock(20.0).unit("kg").minimumThreshold(5.0).build());
+                ingredientRepository.save(Ingredient.builder().name("Pork").currentStock(30.0).unit("kg").minimumThreshold(5.0).build());
+                ingredientRepository.save(Ingredient.builder().name("Walnuts").currentStock(15.0).unit("kg").minimumThreshold(2.0).build());
+                ingredientRepository.save(Ingredient.builder().name("Eggplant").currentStock(10.0).unit("kg").minimumThreshold(3.0).build());
+            }
+
+            // =============================================================
+            // 3. SUPPLIERS
+            // =============================================================
+            if (supplierRepository.count() == 0) {
+                System.out.println(">>> Seeding Suppliers...");
+                supplierRepository.save(Supplier.builder().name("Georgian Fresh Farms").email("contact@geofresh.ge").phone("+995123456789").build());
+                supplierRepository.save(Supplier.builder().name("Caucasus Meat Co.").email("sales@caucasusmeat.ge").phone("+995987654321").build());
+            }
+
+            // =============================================================
+            // 4. DISHES
+            // =============================================================
             if (dishRepository.count() == 0) {
-                System.out.println(">>> Loading Dishes Data...");
+                System.out.println(">>> Seeding Dishes...");
 
-                // === Starters ===
-                dishRepository.save(Dish.builder()
-                        .name("Khachapuri Imeruli")
-                        .description("Traditional Georgian cheese bread with cheese inside.")
-                        .price(new BigDecimal("12.50"))
-                        .category(DishCategory.STARTER)
-                        .imageUrl("resources/static/images/khachapuri.jpg")
-                        .build());
-                dishRepository.save(Dish.builder()
-                        .name("Pkhali Assorti")
-                        .description("Mix of traditional Georgian appetizers made with walnuts and vegetables.")
-                        .price(new BigDecimal("10.00"))
-                        .category(DishCategory.STARTER)
-                        .imageUrl("/images/dishes/pkhali.jpg")
-                        .build());
-                dishRepository.save(Dish.builder()
-                        .name("Badrijani Nigvzit")
-                        .description("Fried eggplant rolls with walnut and garlic filling.")
-                        .price(new BigDecimal("11.00"))
-                        .category(DishCategory.STARTER)
-                        .imageUrl("/images/dishes/badrijani.jpg")
-                        .build());
+                // Starters
+                dishRepository.save(createDish("Khachapuri Imeruli", "Traditional Georgian cheese bread.", "12.50", DishCategory.STARTER, "khachapuri.jpg"));
+                dishRepository.save(createDish("Pkhali Assorti", "Walnut and vegetable appetizers.", "10.00", DishCategory.STARTER, "pkhali.jpg"));
+                dishRepository.save(createDish("Badrijani Nigvzit", "Eggplant rolls with walnut.", "11.00", DishCategory.STARTER, "badrijani.jpg"));
 
-                // === Main Courses ===
-                dishRepository.save(Dish.builder()
-                        .name("Khinkali (5 pcs)")
-                        .description("Georgian dumplings filled with spiced meat and broth.")
-                        .price(new BigDecimal("15.00"))
-                        .category(DishCategory.MAIN_COURSE)
-                        .imageUrl("/images/dishes/khinkali.jpg")
-                        .build());
-                dishRepository.save(Dish.builder()
-                        .name("Mtsvadi (Pork Shashlik)")
-                        .description("Grilled pork skewers served with fresh onions and tkemali sauce.")
-                        .price(new BigDecimal("22.00"))
-                        .category(DishCategory.MAIN_COURSE)
-                        .imageUrl("/images/dishes/mtsvadi.jpg")
-                        .build());
-                dishRepository.save(Dish.builder()
-                        .name("Lobio")
-                        .description("Traditional Georgian bean stew served in a clay pot with mchadi (cornbread).")
-                        .price(new BigDecimal("14.00"))
-                        .category(DishCategory.MAIN_COURSE)
-                        .imageUrl("/images/dishes/lobio.jpg")
-                        .build());
+                // Mains
+                dishRepository.save(createDish("Khinkali (5 pcs)", "Dumplings with spiced meat.", "15.00", DishCategory.MAIN_COURSE, "khinkali.jpg"));
+                dishRepository.save(createDish("Mtsvadi", "Grilled pork skewers.", "22.00", DishCategory.MAIN_COURSE, "mtsvadi.jpg"));
+                dishRepository.save(createDish("Lobio", "Bean stew in clay pot.", "14.00", DishCategory.MAIN_COURSE, "lobio.jpg"));
 
-                // === Desserts ===
-                dishRepository.save(Dish.builder()
-                        .name("Churchkhela")
-                        .description("Traditional candy made from grape must, nuts, and flour.")
-                        .price(new BigDecimal("7.00"))
-                        .category(DishCategory.DESSERT)
-                        .imageUrl("/images/dishes/churchkhela.jpg")
-                        .build());
-                dishRepository.save(Dish.builder()
-                        .name("Pelamushi")
-                        .description("A sweet, dense pudding made from grape juice and cornmeal.")
-                        .price(new BigDecimal("8.00"))
-                        .category(DishCategory.DESSERT)
-                        .imageUrl("/images/dishes/pelamushi.jpg")
-                        .build());
-
-                // === Drinks ===
-                dishRepository.save(Dish.builder()
-                        .name("Lagidze Water (Tarragon)")
-                        .description("Famous Georgian soda with natural tarragon syrup.")
-                        .price(new BigDecimal("5.00"))
-                        .category(DishCategory.DRINK)
-                        .imageUrl("/images/dishes/lagidze.jpg")
-                        .build());
-                dishRepository.save(Dish.builder()
-                        .name("Saperavi Wine (Glass)")
-                        .description("A dry red wine with a dark pomegranate color and robust flavor.")
-                        .price(new BigDecimal("9.00"))
-                        .category(DishCategory.DRINK)
-                        .imageUrl("/images/dishes/saperavi.jpg")
-                        .build());
+                // Desserts & Drinks
+                dishRepository.save(createDish("Churchkhela", "Grape and walnut candy.", "7.00", DishCategory.DESSERT, "churchkhela.jpg"));
+                dishRepository.save(createDish("Saperavi Wine", "Dry red wine.", "9.00", DishCategory.DRINK, "saperavi.jpg"));
             }
 
-            // --- 2. Create Admin User (if not exists) ---
-            String adminEmail = "admin@kinto.com";
-            if (userService.findByEmail(adminEmail) == null) {
-                System.out.println(">>> Creating ADMIN user (" + adminEmail + ")...");
-                User adminUser = User.builder()
-                        .email(adminEmail)
-                        // Default password is "admin"
-                        .password(passwordEncoder.encode("admin"))
-                        .fullName("Admin Kinto")
-                        .phone("000000000")
-                        .role(Role.ADMIN) // Set role to ADMIN
-                        .build();
-                userService.register(adminUser); // Save the admin user
-            }
+            System.out.println(">>> DATA SEEDING COMPLETE <<<");
         };
+    }
+
+    // --- Helper Methods ---
+
+    private void createUserIfNotFound(UserService userService, String email, String password, String name, String phone, Role role) {
+        try {
+            // Check if user exists
+            userService.findByEmail(email);
+            // If code reaches here, user exists, do nothing
+        } catch (RuntimeException e) {
+            // User not found (Exception thrown), so we create it
+            System.out.println(">>> Creating user: " + email);
+            User user = User.builder()
+                    .email(email)
+                    .fullName(name)
+                    .phone(phone)
+                    .role(role)
+                    .build();
+            // Assuming your UserService has a method to save with raw password
+            userService.saveUser(user, password);
+        }
+    }
+
+    private Dish createDish(String name, String desc, String price, DishCategory cat, String img) {
+        return Dish.builder()
+                .name(name)
+                .description(desc)
+                .price(new BigDecimal(price))
+                .category(cat)
+                .imageUrl("/images/dishes/" + img)
+                .build();
     }
 }

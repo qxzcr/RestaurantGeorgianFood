@@ -99,9 +99,9 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
-
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
@@ -123,5 +123,8 @@ public class UserService {
     public void deleteUser(Long userId) {
         if (userId == 1L) throw new RuntimeException("Cannot delete primary admin user.");
         userRepository.deleteById(userId);
+    }
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

@@ -1,6 +1,5 @@
 package com.example.restaurant.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,23 +7,24 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "payments")
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = "payments")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ИСПРАВЛЕНИЕ: Прямая связь с заказом (вместо Bill)
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
-    @JsonIgnore
+    @ToString.Exclude // Чтобы избежать бесконечной рекурсии в логах
     private Order order;
 
+    // ИСПРАВЛЕНИЕ: Используем BigDecimal для точности (вместо double)
     @Column(nullable = false)
     private BigDecimal amount;
 
@@ -32,5 +32,6 @@ public class Payment {
     @Column(nullable = false)
     private PaymentMethod method;
 
+    @Column(nullable = false)
     private LocalDateTime timestamp;
 }

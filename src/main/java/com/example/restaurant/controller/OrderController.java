@@ -21,7 +21,8 @@ public class OrderController {
     @GetMapping
     @Operation(summary = "Get active orders")
     public List<Order> getActiveOrders() {
-        return orderService.getActiveOrders();
+        // ИСПРАВЛЕНИЕ: вызываем findActiveOrders(), так как метод называется так в Service
+        return orderService.findActiveOrders();
     }
 
     @GetMapping("/{id}")
@@ -50,6 +51,7 @@ public class OrderController {
     public void deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
     }
+
     @GetMapping("/stats")
     @Operation(summary = "Get Dashboard Stats", description = "Returns revenue, count, and top dish for today.")
     public DashboardStats getStats() {

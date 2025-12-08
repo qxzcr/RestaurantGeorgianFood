@@ -11,29 +11,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final OrderService orderService; // Используем существующий сервис
+    private final OrderService orderService;
 
     @Transactional
-    public Payment processPayment(Long orderId, BigDecimal amount, PaymentMethod method) {
+    public void pay(Long orderId, BigDecimal amount, PaymentMethod method) {
         Order order = orderService.findOrderById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        BigDecimal total = order.getTotalPrice();
-        BigDecimal alreadyPaid = order.getPaidAmount();
-        BigDecimal remaining = total.subtract(alreadyPaid);
+        BigDecimal remaining = order.getRemainingAmount();
 
         if (amount.compareTo(remaining) > 0) {
-            throw new RuntimeException("Payment amount exceeds remaining balance!");
+            throw new RuntimeException("Amount exceeds remaining balance! Need: " + remaining);
         }
 
-        // Создаем платеж
+        // 1. Создаем платеж
         Payment payment = Payment.builder()
                 .order(order)
                 .amount(amount)
@@ -43,17 +40,14 @@ public class PaymentService {
 
         paymentRepository.save(payment);
 
-        // Проверяем, оплачен ли заказ полностью
-        // Обновляем сумму уже оплаченного (добавляем текущий платеж для проверки)
-        if (alreadyPaid.add(amount).compareTo(total) >= 0) {
-            order.setStatus(OrderStatus.PAID);
+        // ВАЖНО: Добавляем в список заказа, чтобы сразу обновилось состояние в памяти
+        order.getPayments().add(payment);
+
+        // 2. Если всё оплачено -> закрываем заказ
+        // (Сравниваем с нулем: compareTo == 0 значит равны)
+        if (order.getRemainingAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            order.setStatus(OrderStatus.PAID); // Добавь PAID в OrderStatus, если нет!
             orderService.saveOrder(order);
         }
-
-        return payment;
-    }
-
-    public List<Payment> getPaymentsByOrder(Long orderId) {
-        return paymentRepository.findByOrderId(orderId);
     }
 }

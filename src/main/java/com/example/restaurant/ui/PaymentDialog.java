@@ -18,55 +18,53 @@ import java.math.BigDecimal;
 
 public class PaymentDialog extends Dialog {
 
-    public PaymentDialog(Order order, PaymentService paymentService, Runnable onSuccess) {
-        setHeaderTitle("Payment for Table " + order.getTableNumber());
-
-        BigDecimal total = order.getTotalPrice();
-        BigDecimal paid = order.getPaidAmount();
-        BigDecimal remaining = total.subtract(paid);
+    public PaymentDialog(Order order, PaymentService paymentService, Runnable onPaymentSuccess) {
+        setHeaderTitle("Payment - Table " + order.getTableNumber());
 
         VerticalLayout layout = new VerticalLayout();
+
+        // Информация о суммах
+        BigDecimal total = order.getTotalPrice();
+        BigDecimal paid = order.getPaidAmount();
+        BigDecimal remaining = order.getRemainingAmount();
+
         layout.add(new H3("Total: $" + total));
-        layout.add(new Span("Already Paid: $" + paid));
+        layout.add(new Span("Paid: $" + paid));
 
-        Span remainingSpan = new Span("Remaining: $" + remaining);
-        remainingSpan.getStyle().set("color", "red").set("font-weight", "bold");
-        layout.add(remainingSpan);
+        Span remainText = new Span("Remaining: $" + remaining);
+        remainText.getStyle().set("color", "red").set("font-weight", "bold");
+        layout.add(remainText);
 
+        // Поле ввода суммы (по умолчанию - остаток)
         BigDecimalField amountField = new BigDecimalField("Amount to Pay");
-        amountField.setValue(remaining); // По умолчанию полная сумма
+        amountField.setValue(remaining);
         amountField.setWidthFull();
 
-        ComboBox<PaymentMethod> methodSelect = new ComboBox<>("Payment Method");
-        methodSelect.setItems(PaymentMethod.values());
-        methodSelect.setValue(PaymentMethod.CARD);
-        methodSelect.setWidthFull();
+        // Выбор метода
+        ComboBox<PaymentMethod> methodField = new ComboBox<>("Method");
+        methodField.setItems(PaymentMethod.values());
+        methodField.setValue(PaymentMethod.CARD);
+        methodField.setWidthFull();
 
-        Button payButton = new Button("Pay", e -> {
+        // Кнопка оплаты
+        Button payBtn = new Button("Pay", e -> {
             try {
                 BigDecimal amount = amountField.getValue();
-                if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-                    Notification.show("Invalid amount").addThemeVariants(NotificationVariant.LUMO_ERROR);
-                    return;
-                }
+                PaymentMethod method = methodField.getValue();
 
-                paymentService.processPayment(order.getId(), amount, methodSelect.getValue());
+                paymentService.pay(order.getId(), amount, method);
 
-                Notification.show("Payment successful!").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                onSuccess.run(); // Callback to refresh UI
+                Notification.show("Payment accepted!").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                onPaymentSuccess.run(); // Обновить экран официанта
                 close();
-
             } catch (Exception ex) {
                 Notification.show(ex.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
-        payButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        payButton.setWidthFull();
+        payBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        payBtn.setWidthFull();
 
-        Button cancelButton = new Button("Cancel", e -> close());
-        cancelButton.setWidthFull();
-
-        layout.add(amountField, methodSelect, payButton, cancelButton);
+        layout.add(amountField, methodField, payBtn);
         add(layout);
     }
 }

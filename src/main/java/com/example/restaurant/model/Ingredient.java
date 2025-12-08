@@ -1,31 +1,30 @@
 package com.example.restaurant.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = "ingredients")
 public class Ingredient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @Min(0)
-    private double currentStock; // e.g., 5.5
+    @Column(nullable = false)
+    private double currentStock;
 
-    @NotBlank
+    @Column(nullable = false)
     private String unit; // e.g., "kg", "liters", "pcs"
 
-    @Min(0)
-    private double minStockLevel; // Threshold for low-stock alert
+    // --- ADD THIS FIELD ---
+    @Column(nullable = false)
+    @Builder.Default
+    private double minimumThreshold = 5.0; // Default alert level, e.g., 5.0 units
 }

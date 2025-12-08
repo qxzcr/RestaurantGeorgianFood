@@ -101,6 +101,7 @@ public class ApiSecurityConfig {
 
                         .requestMatchers("/api/inventory/**").permitAll() // For Swagger Demo
                         .requestMatchers("/api/payments/**").permitAll()
+                        .requestMatchers("/api/reviews/**").permitAll()
                         // 4. Default rule: everything else requires authentication
                         .anyRequest().authenticated()
                 )

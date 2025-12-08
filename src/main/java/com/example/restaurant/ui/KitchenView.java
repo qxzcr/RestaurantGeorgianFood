@@ -10,7 +10,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -21,7 +20,7 @@ import java.util.List;
 
 @Route(value = "kitchen", layout = MainLayout.class)
 @PageTitle("Kitchen KDS | Kinto")
-@RolesAllowed({"ADMIN", "WAITER"}) // Можно добавить роль CHEF, если есть
+@RolesAllowed({"ADMIN", "WAITER", "CHEF"})
 public class KitchenView extends VerticalLayout {
 
     private final OrderService orderService;
@@ -41,7 +40,6 @@ public class KitchenView extends VerticalLayout {
         ordersContainer = new Div();
         ordersContainer.addClassName("kitchen-grid");
         ordersContainer.setWidthFull();
-        // Сделаем сетку через CSS (Flex wrap)
         ordersContainer.getStyle().set("display", "flex");
         ordersContainer.getStyle().set("flex-wrap", "wrap");
         ordersContainer.getStyle().set("gap", "20px");
@@ -53,8 +51,8 @@ public class KitchenView extends VerticalLayout {
     private void refreshOrders() {
         ordersContainer.removeAll();
 
-        // Берем все активные заказы
-        List<Order> orders = orderService.getActiveOrders();
+        // ИСПРАВЛЕНИЕ: Используем правильное имя метода findActiveOrders()
+        List<Order> orders = orderService.findActiveOrders();
 
         // Фильтруем только те, что готовятся (PREPARING)
         orders.stream()
@@ -72,7 +70,11 @@ public class KitchenView extends VerticalLayout {
         ticket.setPadding(true);
 
         H3 tableHeader = new H3("Table " + order.getTableNumber());
-        Span timeSpan = new Span("Time: " + order.getCreatedAt().format(DateTimeFormatter.ofPattern("HH:mm")));
+
+        // Добавлена проверка на null, чтобы не было ошибок
+        String timeStr = order.getCreatedAt() != null ?
+                order.getCreatedAt().format(DateTimeFormatter.ofPattern("HH:mm")) : "N/A";
+        Span timeSpan = new Span("Time: " + timeStr);
 
         VerticalLayout itemsLayout = new VerticalLayout();
         itemsLayout.setSpacing(false);

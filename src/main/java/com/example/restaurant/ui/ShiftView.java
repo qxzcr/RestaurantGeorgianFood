@@ -1,0 +1,150 @@
+package com.example.restaurant.ui;
+
+import com.example.restaurant.model.Shift;
+import com.example.restaurant.model.User;
+import com.example.restaurant.service.ShiftService;
+import com.example.restaurant.service.UserService;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.RolesAllowed;
+
+import java.time.format.DateTimeFormatter;
+
+@Route(value = "shifts", layout = MainLayout.class)
+@PageTitle("Staff Schedule | Kinto")
+@RolesAllowed({"ADMIN", "MANAGER"})
+public class ShiftView extends VerticalLayout {
+
+    private final ShiftService shiftService;
+    private final UserService userService;
+
+    private Grid<Shift> shiftGrid;
+
+    public ShiftView(ShiftService shiftService, UserService userService) {
+        this.shiftService = shiftService;
+        this.userService = userService;
+
+        setSizeFull();
+        add(new H1("Staff Schedule Management"));
+
+        // Кнопка добавления
+        Button addShiftBtn = new Button("Add Shift", VaadinIcon.PLUS.create(), e -> openShiftDialog(new Shift()));
+        addShiftBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        // Настройка таблицы
+        shiftGrid = new Grid<>(Shift.class, false);
+
+        // Колонки данных
+        shiftGrid.addColumn(shift -> shift.getEmployee().getName()).setHeader("Employee");
+        shiftGrid.addColumn(shift -> shift.getEmployee().getRole()).setHeader("Role");
+
+        // Красивый формат даты
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM HH:mm");
+
+        // ИСПРАВЛЕНИЕ: Используем простое форматирование вместо LocalDateTimeRenderer
+        shiftGrid.addColumn(s -> s.getStartTime() != null ? formatter.format(s.getStartTime()) : "")
+                .setHeader("Start Time");
+        shiftGrid.addColumn(s -> s.getEndTime() != null ? formatter.format(s.getEndTime()) : "")
+                .setHeader("End Time");
+
+        shiftGrid.addColumn(Shift::getNotes).setHeader("Notes");
+
+        // КОЛОНКА ДЕЙСТВИЙ (Edit / Delete)
+        shiftGrid.addComponentColumn(shift -> {
+            // Кнопка Редактировать
+            Button editBtn = new Button(VaadinIcon.EDIT.create(), e -> openShiftDialog(shift));
+            editBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+            // Кнопка Удалить
+            Button deleteBtn = new Button(VaadinIcon.TRASH.create(), e -> {
+                shiftService.deleteShift(shift.getId());
+                refresh();
+                Notification.show("Shift deleted");
+            });
+            deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
+
+            return new HorizontalLayout(editBtn, deleteBtn);
+        }).setHeader("Actions");
+
+        add(addShiftBtn, shiftGrid);
+        refresh();
+    }
+
+    private void refresh() {
+        shiftGrid.setItems(shiftService.getAllShifts());
+    }
+
+    // Диалог для Создания и Редактирования
+    private void openShiftDialog(Shift shift) {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle(shift.getId() == null ? "Create Shift" : "Edit Shift");
+
+        ComboBox<User> employeeSelect = new ComboBox<>("Employee");
+        employeeSelect.setItems(userService.findAll());
+        employeeSelect.setItemLabelGenerator(u -> u.getName() + " (" + u.getRole() + ")");
+
+        // Если редактируем, блокируем смену сотрудника (опционально) или просто ставим текущего
+        if (shift.getEmployee() != null) {
+            employeeSelect.setValue(shift.getEmployee());
+        }
+
+        DateTimePicker startPicker = new DateTimePicker("Start Time");
+        if (shift.getStartTime() != null) startPicker.setValue(shift.getStartTime());
+
+        DateTimePicker endPicker = new DateTimePicker("End Time");
+        if (shift.getEndTime() != null) endPicker.setValue(shift.getEndTime());
+
+        TextArea notes = new TextArea("Notes");
+        if (shift.getNotes() != null) notes.setValue(shift.getNotes());
+
+        Button save = new Button("Save", e -> {
+            try {
+                if (shift.getId() == null) {
+                    // Создание новой смены
+                    shiftService.createShift(
+                            employeeSelect.getValue(),
+                            startPicker.getValue(),
+                            endPicker.getValue(),
+                            notes.getValue()
+                    );
+                } else {
+                    // ОБНОВЛЕНИЕ существующей смены
+                    shiftService.updateShift(
+                            shift.getId(),
+                            startPicker.getValue(),
+                            endPicker.getValue(),
+                            notes.getValue()
+                    );
+                }
+                refresh();
+                dialog.close();
+                Notification.show("Saved successfully");
+            } catch (Exception ex) {
+                Notification.show("Error: " + ex.getMessage());
+            }
+        });
+
+        Button cancel = new Button("Cancel", e -> dialog.close());
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        VerticalLayout dialogLayout = new VerticalLayout(employeeSelect, startPicker, endPicker, notes);
+        dialogLayout.setSpacing(true);
+        dialogLayout.setPadding(false);
+
+        dialog.add(dialogLayout);
+        dialog.getFooter().add(cancel, save);
+        dialog.open();
+    }
+}

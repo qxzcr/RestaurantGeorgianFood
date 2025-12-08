@@ -45,7 +45,7 @@ public class AdminView extends VerticalLayout {
     private final ReservationService reservationService;
     private final OrderService orderService;
     private final ImageUploadService imageUploadService;
-    private final InventoryService inventoryService; // <--- NEW SERVICE
+    private final InventoryService inventoryService;
 
     private UserForm userForm;
     private DishForm dishForm;
@@ -64,7 +64,7 @@ public class AdminView extends VerticalLayout {
     public AdminView(UserService userService, DishService dishService,
                      ReservationService reservationService, OrderService orderService,
                      ImageUploadService imageUploadService,
-                     InventoryService inventoryService) { // <--- INJECTED HERE
+                     InventoryService inventoryService) {
         this.userService = userService;
         this.dishService = dishService;
         this.reservationService = reservationService;
@@ -270,7 +270,6 @@ public class AdminView extends VerticalLayout {
     }
 
     private DishForm createDishForm() {
-        // (UPDATED) Pass inventoryService to DishForm
         DishForm form = new DishForm(imageUploadService, inventoryService);
         form.setVisible(false);
         form.addListener(DishForm.SaveEvent.class, event -> {
@@ -354,7 +353,8 @@ public class AdminView extends VerticalLayout {
     private void refreshActiveOrders() {
         activeOrdersLayout.removeAll();
         activeOrdersLayout.add(new H2(getTranslation("admin.tab.orders")));
-        List<Order> orders = orderService.getActiveOrders();
+        // ИСПРАВЛЕНИЕ: вызываем findActiveOrders()
+        List<Order> orders = orderService.findActiveOrders();
         if (orders.isEmpty()) activeOrdersLayout.add(new Span("No active orders."));
         else for (Order order : orders) activeOrdersLayout.add(createOrderCard(order));
     }

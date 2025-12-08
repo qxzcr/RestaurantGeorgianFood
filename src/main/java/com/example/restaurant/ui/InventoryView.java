@@ -8,7 +8,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -61,7 +60,8 @@ public class InventoryView extends VerticalLayout {
                 .setHeader(getTranslation("form.ingredient.stock", "Stock"))
                 .setSortable(true);
 
-        grid.addColumn(Ingredient::getMinStockLevel)
+        // ИСПРАВЛЕНИЕ: Используем getMinimumThreshold
+        grid.addColumn(Ingredient::getMinimumThreshold)
                 .setHeader(getTranslation("form.ingredient.min", "Min Level"));
 
         // Status Column with Badge
@@ -109,7 +109,9 @@ public class InventoryView extends VerticalLayout {
         binder.bind(name, Ingredient::getName, Ingredient::setName);
         binder.bind(unit, Ingredient::getUnit, Ingredient::setUnit);
         binder.bind(stock, Ingredient::getCurrentStock, Ingredient::setCurrentStock);
-        binder.bind(minStock, Ingredient::getMinStockLevel, Ingredient::setMinStockLevel);
+
+        // ИСПРАВЛЕНИЕ: Используем getMinimumThreshold и setMinimumThreshold
+        binder.bind(minStock, Ingredient::getMinimumThreshold, Ingredient::setMinimumThreshold);
 
         binder.setBean(ingredient);
 

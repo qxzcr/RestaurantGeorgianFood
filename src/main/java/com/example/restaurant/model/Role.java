@@ -1,5 +1,5 @@
 package com.example.restaurant.model;
 
 public enum Role {
-    ADMIN, WAITER, CUSTOMER
+    ADMIN, WAITER, CUSTOMER, CHEF, INVENTORY_MANAGER
 }
