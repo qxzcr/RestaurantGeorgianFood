@@ -12,9 +12,9 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    // Найти все брони конкретного пользователя
+    // Find all reservations for a specific user
     List<Reservation> findByUser(User user);
 
-    // (НОВОЕ!) Считаем количество броней на конкретную дату и время
+    // Count reservations for a specific date and time
     int countByReservationDateAndReservationTime(LocalDate date, LocalTime time);
 }

@@ -158,40 +158,68 @@ public class AuthView extends VerticalLayout implements BeforeEnterObserver {
         }
     }
 
-    private void register(String email, String password, String confirmPassword,
-                          String fullName, String phone) {
-        if (!password.equals(confirmPassword)) {
-            showError(getTranslation("auth.error.passwords_match", "Passwords do not match"));
-            return;
-        }
-        if (email.isBlank() || password.isBlank() || fullName.isBlank()) {
-            showError(getTranslation("error.required", "All fields are required"));
-            return;
-        }
-
-        // --- ИСПРАВЛЕНИЕ: Безопасная проверка существования email ---
-        try {
-            userService.findByEmail(email);
-            // Если метод не упал, значит пользователь найден -> Ошибка регистрации
-            showError(getTranslation("auth.error.email_exists", "Email already exists"));
-            return;
-        } catch (RuntimeException e) {
-            // Если упала ошибка "User not found" -> Отлично, пользователя нет, продолжаем!
-        }
-        // -------------------------------------------------------------
-
-        User user = User.builder()
-                .email(email)
-                .password(passwordEncoder.encode(password))
-                .fullName(fullName)
-                .phone(phone)
-                .role(Role.CUSTOMER)
-                .build();
-
-        userService.register(user);
-        showSuccess(getTranslation("auth.success.created", "Account created! Please sign in."));
-        showForm(true);
+//    private void register(String email, String password, String confirmPassword,
+//                          String fullName, String phone) {
+//        if (!password.equals(confirmPassword)) {
+//            showError(getTranslation("auth.error.passwords_match", "Passwords do not match"));
+//            return;
+//        }
+//        if (email.isBlank() || password.isBlank() || fullName.isBlank()) {
+//            showError(getTranslation("error.required", "All fields are required"));
+//            return;
+//        }
+//
+//        // Check if email is already registered
+//        try {
+//            userService.findByEmail(email);
+//            showError(getTranslation("auth.error.email_exists", "Email already exists"));
+//            return;
+//        } catch (RuntimeException e) {
+//        }
+//        // -------------------------------------------------------------
+//
+//        User user = User.builder()
+//                .email(email)
+//                .password(passwordEncoder.encode(password))
+//                .fullName(fullName)
+//                .phone(phone)
+//                .role(Role.CUSTOMER)
+//                .build();
+//
+//        userService.register(user);
+//        showSuccess(getTranslation("auth.success.created", "Account created! Please sign in."));
+//        showForm(true);
+//    }
+private void register(String email, String password, String confirmPassword,
+                      String fullName, String phone) {
+    if (!password.equals(confirmPassword)) {
+        showError(getTranslation("auth.error.passwords_match", "Passwords do not match"));
+        return;
     }
+    if (email.isBlank() || password.isBlank() || fullName.isBlank()) {
+        showError(getTranslation("error.required", "All fields are required"));
+        return;
+    }
+
+    try {
+        userService.findByEmail(email);
+        showError(getTranslation("auth.error.email_exists", "Email already exists"));
+        return;
+    } catch (RuntimeException e) {
+    }
+
+    User user = User.builder()
+            .email(email)
+            .password(password)
+            .fullName(fullName)
+            .phone(phone)
+            .role(Role.CUSTOMER)
+            .build();
+
+    userService.register(user);
+    showSuccess(getTranslation("auth.success.created", "Account created! Please sign in."));
+    showForm(true);
+}
 
     private void showError(String message) {
         Notification n = Notification.show(message, 3000, Notification.Position.TOP_CENTER);

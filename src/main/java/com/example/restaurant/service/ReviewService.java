@@ -18,7 +18,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final DishRepository dishRepository;
-
+    // Add a new review for a dish by a user
     public Review addReview(User user, Dish dish, int rating, String comment) {
         Review review = Review.builder()
                 .user(user)
@@ -41,17 +41,17 @@ public class ReviewService {
 
         if (rating != null) review.setRating(rating);
         if (comment != null) review.setComment(comment);
-        // Обновляем дату на текущую при редактировании
+        // Update the review date to today
         review.setDate(LocalDate.now());
 
         return reviewRepository.save(review);
     }
-
+    // Delete a review by its ID
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
     }
 
-    // Подсчет среднего рейтинга
+    // Calculate average rating for a dish
     public double getAverageRating(Long dishId) {
         List<Review> reviews = reviewRepository.findByDishId(dishId);
         if (reviews.isEmpty()) return 0.0;

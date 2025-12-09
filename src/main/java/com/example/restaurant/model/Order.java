@@ -53,28 +53,31 @@ public class Order {
     @EqualsAndHashCode.Exclude
     private Reservation reservation;
 
-    // --- СВЯЗЬ С ПЛАТЕЖАМИ ---
-    // mappedBy = "order", так как в Payment теперь поле "order"
+    // --- PAYMENT RELATION ---
+    // mappedBy = "order" because Payment contains the owning side field "order"
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Payment> payments = new ArrayList<>();
 
-    // --- ХЕЛПЕРЫ ДЛЯ РАСЧЕТОВ ---
+    // --- CALCULATION HELPERS ---
 
+    // Calculates total cost of all order items
     public BigDecimal getTotalPrice() {
         return items.stream()
                 .map(OrderItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    // Calculates total amount paid
     public BigDecimal getPaidAmount() {
         if (payments == null || payments.isEmpty()) return BigDecimal.ZERO;
         return payments.stream()
-                // Теперь getAmount возвращает BigDecimal, конвертация не нужна
+// Amount is already BigDecimal
                 .map(Payment::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    // Remaining balance to be paid
     public BigDecimal getRemainingAmount() {
         return getTotalPrice().subtract(getPaidAmount());
     }

@@ -14,12 +14,14 @@ public class TranslationProvider implements I18NProvider {
 
     @Override
     public List<Locale> getProvidedLocales() {
+        // Supported languages for the application
         return List.of(new Locale("en"), new Locale("pl"));
     }
 
     @Override
     public String getTranslation(String key, Locale locale, Object... params) {
         if (key == null) {
+            // Null key should not break the UI
             return "";
         }
 
@@ -29,10 +31,11 @@ public class TranslationProvider implements I18NProvider {
         try {
             value = bundle.getString(key);
         } catch (final Exception e) {
-            // Если перевод не найден, возвращаем сам ключ, чтобы ты видела ошибку
+            // If translation is missing, return the key wrapped in markers to highlight the issue
             return "!" + key + "!";
         }
 
+        // Apply formatting parameters if provided
         if (params.length > 0) {
             value = String.format(value, params);
         }

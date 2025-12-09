@@ -61,14 +61,13 @@ public class ShiftService {
         shiftRepository.deleteById(id);
     }
 
-    // Статистика персонала
+    // Calculate staff statistics (total shifts and hours worked)
     public List<StaffStatsDTO> getStaffStatistics() {
         List<User> employees = userRepository.findAll();
         List<StaffStatsDTO> stats = new ArrayList<>();
 
         for (User emp : employees) {
-            // Используем метод, который точно есть (или добавь findByEmployee в репозиторий)
-            // Здесь я использую findByEmployee, но тебе нужно добавить его в интерфейс репозитория (см. ниже)
+            // Fetch all shifts for the employee
             List<Shift> shifts = shiftRepository.findByEmployee(emp);
 
             double hours = shifts.stream()

@@ -11,7 +11,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "users")
-// (ВОТ ИСПРАВЛЕНИЕ!) Заменяем @Data
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,15 +36,14 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // (ВОТ ИСПРАВЛЕНИЕ!)
-    // Исключаем User из toString() и equals(), чтобы разорвать цикл
+    // Prevent recursive loops in toString() / equals() by excluding relation fields
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     private List<Reservation> reservations;
 
-    // (Добавляем связь для Панели Официанта)
+    // Relation for waiter dashboard — orders created/handled by the waiter
     @OneToMany(mappedBy = "waiter")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -59,9 +57,9 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
-    // Внутри класса User.java
+    // Custom getter used in UI or logs
     public String getName() {
-        return this.email; // Возвращаем email как имя
+        return this.email;  // Email is used as display name
     }
     @Override public String getUsername() { return email; }
     @Override public boolean isAccountNonExpired() { return true; }

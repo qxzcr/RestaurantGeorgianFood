@@ -25,7 +25,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder; // ← Внедряем сюда
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
@@ -47,13 +47,13 @@ public class AuthController {
 
         User user = User.builder()
                 .email(request.email())
-                .password(passwordEncoder.encode(request.password())) // ← Хешируем здесь
+                .password(passwordEncoder.encode(request.password()))
                 .fullName(request.fullName())
                 .phone(request.phone())
                 .role(Role.CUSTOMER)
                 .build();
 
-        userService.register(user); // ← Только save
+        userService.register(user);
         return ResponseEntity.ok("Konto utworzone");
     }
 

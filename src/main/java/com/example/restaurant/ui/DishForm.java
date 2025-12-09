@@ -113,7 +113,7 @@ public class DishForm extends FormLayout {
         recipeGrid.addColumn(di -> di.getQuantity() + " " + di.getIngredient().getUnit()).setHeader("Qty Needed");
 
         recipeGrid.addComponentColumn(di -> {
-            // FIX: Use explicit addClickListener instead of constructor lambda
+            // Use explicit addClickListener instead of constructor lambda
             Button removeBtn = new Button(VaadinIcon.TRASH.create());
             removeBtn.addClickListener(e -> {
                 currentIngredients.remove(di);
@@ -144,7 +144,7 @@ public class DishForm extends FormLayout {
     }
 
     private Button createAddIngredientBtn() {
-        // FIX: Use explicit addClickListener
+        // Use explicit addClickListener
         Button btn = new Button(VaadinIcon.PLUS.create());
         btn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         btn.addClickListener(e -> {

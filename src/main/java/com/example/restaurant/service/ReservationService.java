@@ -37,7 +37,6 @@ public class ReservationService {
             );
 
             if (existingBookings >= TOTAL_TABLES) {
-                // Это сообщение увидит пользователь в уведомлении об ошибке
                 throw new RuntimeException("Sorry, all tables are booked for this time! Please choose another slot.");
             }
         }

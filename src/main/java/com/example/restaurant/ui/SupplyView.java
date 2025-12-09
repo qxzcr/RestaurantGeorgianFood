@@ -50,7 +50,6 @@ public class SupplyView extends VerticalLayout {
         supplierGrid.addColumn(Supplier::getEmail).setHeader("Email");
         supplierGrid.addColumn(Supplier::getPhone).setHeader("Phone");
 
-        // Колонка действий для Поставщиков (Edit / Delete)
         supplierGrid.addComponentColumn(supplier -> {
             Button editBtn = new Button(VaadinIcon.EDIT.create(), e -> openSupplierDialog(supplier));
             editBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -76,20 +75,33 @@ public class SupplyView extends VerticalLayout {
         orderGrid.addColumn(o -> o.getIngredient().getName()).setHeader("Ingredient");
         orderGrid.addColumn(SupplyOrder::getQuantity).setHeader("Qty");
 
-        // Красивое отображение статуса
         orderGrid.addComponentColumn(o -> {
             String status = o.getStatus().name();
             Span badge = new Span(status);
-            badge.getElement().getThemeList().add("badge " + (status.equals("RECEIVED") ? "success" : "contrast"));
+            if ("RECEIVED".equals(status)) badge.getElement().getThemeList().add("badge success");
+            else if ("CANCELLED".equals(status)) badge.getElement().getThemeList().add("badge error");
+            else if ("SENT".equals(status)) badge.getElement().getThemeList().add("badge primary");
+            else badge.getElement().getThemeList().add("badge contrast");
             return badge;
         }).setHeader("Status");
 
-        // Колонка действий для Заказов (Receive / Delete)
+        // --- ОБНОВЛЕННАЯ КОЛОНКА ДЕЙСТВИЙ ---
         orderGrid.addComponentColumn(order -> {
             HorizontalLayout actions = new HorizontalLayout();
 
-            // Кнопка Receive только если еще не получено
-            if (order.getStatus() != SupplyStatus.RECEIVED) {
+            // 1. Отправить (если создан)
+            if (order.getStatus() == SupplyStatus.CREATED) {
+                Button sendBtn = new Button("Send", VaadinIcon.PAPERPLANE.create(), e -> {
+                    supplyService.sendOrder(order.getId());
+                    refresh();
+                    Notification.show("Order Sent!");
+                });
+                sendBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
+                actions.add(sendBtn);
+            }
+
+            // 2. Принять (если отправлен)
+            if (order.getStatus() == SupplyStatus.SENT) {
                 Button receiveBtn = new Button("Receive", e -> {
                     supplyService.markReceived(order.getId());
                     refresh();
@@ -99,7 +111,18 @@ public class SupplyView extends VerticalLayout {
                 actions.add(receiveBtn);
             }
 
-            // Кнопка Delete всегда доступна (или можно скрыть для RECEIVED, если нужно)
+            // 3. Отменить (если не принят и не отменен)
+            if (order.getStatus() != SupplyStatus.RECEIVED && order.getStatus() != SupplyStatus.CANCELLED) {
+                Button cancelBtn = new Button(VaadinIcon.BAN.create(), e -> {
+                    supplyService.cancelOrder(order.getId());
+                    refresh();
+                    Notification.show("Order Cancelled");
+                });
+                cancelBtn.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_SMALL);
+                actions.add(cancelBtn);
+            }
+
+            // 4. Удалить (всегда)
             Button deleteBtn = new Button(VaadinIcon.TRASH.create(), e -> {
                 supplyService.deleteOrder(order.getId());
                 refresh();
@@ -109,7 +132,7 @@ public class SupplyView extends VerticalLayout {
             actions.add(deleteBtn);
 
             return actions;
-        }).setHeader("Actions");
+        }).setHeader("Actions").setAutoWidth(true);
 
         add(addOrderBtn, orderGrid);
         refresh();
@@ -120,40 +143,23 @@ public class SupplyView extends VerticalLayout {
         orderGrid.setItems(supplyService.findAllOrders());
     }
 
-    // Диалог теперь принимает Supplier для редактирования
     private void openSupplierDialog(Supplier supplier) {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle(supplier.getId() == null ? "Add Supplier" : "Edit Supplier");
-
-        TextField name = new TextField("Name");
-        name.setValue(supplier.getName() == null ? "" : supplier.getName());
-
-        TextField email = new TextField("Email");
-        email.setValue(supplier.getEmail() == null ? "" : supplier.getEmail());
-
-        TextField phone = new TextField("Phone");
-        phone.setValue(supplier.getPhone() == null ? "" : supplier.getPhone());
+        TextField name = new TextField("Name"); name.setValue(supplier.getName() == null ? "" : supplier.getName());
+        TextField email = new TextField("Email"); email.setValue(supplier.getEmail() == null ? "" : supplier.getEmail());
+        TextField phone = new TextField("Phone"); phone.setValue(supplier.getPhone() == null ? "" : supplier.getPhone());
 
         Button save = new Button("Save", e -> {
             supplier.setName(name.getValue());
             supplier.setEmail(email.getValue());
             supplier.setPhone(phone.getValue());
-
-            if (supplier.getId() == null) {
-                // Создание нового
-                supplyService.saveSupplier(supplier);
-            } else {
-                // Обновление существующего (метод, который мы добавили в Service)
-                supplyService.updateSupplier(supplier.getId(), supplier);
-            }
-
+            if (supplier.getId() == null) supplyService.saveSupplier(supplier);
+            else supplyService.updateSupplier(supplier.getId(), supplier);
             refresh();
             dialog.close();
         });
-
         Button cancel = new Button("Cancel", e -> dialog.close());
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
         dialog.add(new VerticalLayout(name, email, phone));
         dialog.getFooter().add(cancel, save);
         dialog.open();
@@ -161,15 +167,12 @@ public class SupplyView extends VerticalLayout {
 
     private void openOrderDialog() {
         Dialog dialog = new Dialog("Create Supply Order");
-
         ComboBox<Supplier> supplierSelect = new ComboBox<>("Supplier");
         supplierSelect.setItems(supplyService.findAllSuppliers());
         supplierSelect.setItemLabelGenerator(Supplier::getName);
-
         ComboBox<Ingredient> ingredientSelect = new ComboBox<>("Ingredient");
         ingredientSelect.setItems(inventoryService.findAllIngredients());
         ingredientSelect.setItemLabelGenerator(Ingredient::getName);
-
         NumberField qty = new NumberField("Quantity");
 
         Button save = new Button("Create Order", e -> {
@@ -177,16 +180,9 @@ public class SupplyView extends VerticalLayout {
                 supplyService.createOrder(supplierSelect.getValue(), ingredientSelect.getValue(), qty.getValue());
                 refresh();
                 dialog.close();
-            } else {
-                Notification.show("Please fill all fields");
             }
         });
-
-        Button cancel = new Button("Cancel", e -> dialog.close());
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-        dialog.add(new VerticalLayout(supplierSelect, ingredientSelect, qty));
-        dialog.getFooter().add(cancel, save);
+        dialog.add(new VerticalLayout(supplierSelect, ingredientSelect, qty, save));
         dialog.open();
     }
 }

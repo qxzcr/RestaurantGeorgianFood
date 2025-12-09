@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    // Найти все платежи, сортируя от новых к старым
+    // Retrieve all payments, sorted from newest to oldest
     List<Payment> findAllByOrderByTimestampDesc();
 
-    // Найти платежи для конкретного заказа (пригодится для диалогового окна)
+    // Retrieve all payments for a specific order (useful for dialogs/modals)
     List<Payment> findByOrderId(Long orderId);
 }

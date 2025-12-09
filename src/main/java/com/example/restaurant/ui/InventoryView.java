@@ -60,7 +60,7 @@ public class InventoryView extends VerticalLayout {
                 .setHeader(getTranslation("form.ingredient.stock", "Stock"))
                 .setSortable(true);
 
-        // ИСПРАВЛЕНИЕ: Используем getMinimumThreshold
+        // Using getMinimumThreshold
         grid.addColumn(Ingredient::getMinimumThreshold)
                 .setHeader(getTranslation("form.ingredient.min", "Min Level"));
 
@@ -110,7 +110,6 @@ public class InventoryView extends VerticalLayout {
         binder.bind(unit, Ingredient::getUnit, Ingredient::setUnit);
         binder.bind(stock, Ingredient::getCurrentStock, Ingredient::setCurrentStock);
 
-        // ИСПРАВЛЕНИЕ: Используем getMinimumThreshold и setMinimumThreshold
         binder.bind(minStock, Ingredient::getMinimumThreshold, Ingredient::setMinimumThreshold);
 
         binder.setBean(ingredient);

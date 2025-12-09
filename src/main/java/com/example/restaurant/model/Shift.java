@@ -27,5 +27,5 @@ public class Shift {
     @Column(nullable = false)
     private LocalDateTime endTime;
 
-    private String notes; // e.g., "Morning Shift", "Covering for John"
+    private String notes;
 }

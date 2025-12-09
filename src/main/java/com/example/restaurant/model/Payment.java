@@ -18,13 +18,11 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ИСПРАВЛЕНИЕ: Прямая связь с заказом (вместо Bill)
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
-    @ToString.Exclude // Чтобы избежать бесконечной рекурсии в логах
+    @ToString.Exclude
     private Order order;
 
-    // ИСПРАВЛЕНИЕ: Используем BigDecimal для точности (вместо double)
     @Column(nullable = false)
     private BigDecimal amount;
 

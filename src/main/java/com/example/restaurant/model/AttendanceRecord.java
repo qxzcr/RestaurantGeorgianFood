@@ -5,25 +5,20 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = "notifications")
-public class Notification {
+public class AttendanceRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User recipient;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    private String message;
-
-    private boolean isRead;
-
-    private LocalDateTime timestamp;
+    private LocalDateTime clockInTime;
+    private LocalDateTime clockOutTime;
 }

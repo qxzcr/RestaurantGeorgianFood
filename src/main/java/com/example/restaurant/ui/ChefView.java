@@ -137,7 +137,6 @@ public class ChefView extends VerticalLayout {
         infoContainer.setPadding(false);
         infoContainer.setSpacing(true);
 
-        // ИСПОЛЬЗУЕМ ПЕРЕВОД
         H1 title = new H1(getTranslation("chef.title"));
         Paragraph name = new Paragraph(getTranslation("chef.name"));
         name.addClassName("chef-name");
@@ -158,7 +157,6 @@ public class ChefView extends VerticalLayout {
         section.addClassName("chef-gallery-section");
         section.setAlignItems(Alignment.CENTER);
 
-        // Можно добавить ключ chef.gallery в messages.properties или оставить текст
         H2 title = new H2("From Giorgi's Kitchen");
 
         HorizontalLayout grid = new HorizontalLayout();

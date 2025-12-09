@@ -20,11 +20,13 @@ public class VaadinSecurityConfig extends VaadinWebSecurity {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // Password hashing mechanism for user authentication
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityContextRepository securityContextRepository() {
+        // Stores security context in the user's HTTP session
         return new HttpSessionSecurityContextRepository();
     }
 
@@ -38,7 +40,7 @@ public class VaadinSecurityConfig extends VaadinWebSecurity {
                         "/about",
                         "/chef",
                         "/menu",
-                        // Разрешаем доступ к Swagger, чтобы не просил логин
+                        // Allow Swagger access without authentication
                         "/swagger-ui/**",
                         "/v3/api-docs/**"
                 ).permitAll()
@@ -52,14 +54,15 @@ public class VaadinSecurityConfig extends VaadinWebSecurity {
         );
 
         super.configure(http);
+        // Set the login view for Vaadin-secured routes
         setLoginView(http, AuthView.class, "/auth");
     }
 
-    // 👇 ВОТ ЭТОТ МЕТОД ИСПРАВИТ ОШИБКУ СО СКРИНШОТА 👇
+    // This method resolves the Swagger access issue shown in the screenshot
     @Override
     public void configure(WebSecurity web) throws Exception {
-        // Говорим Vaadin'у полностью игнорировать эти пути
-        // Тогда запрос пойдет напрямую к Swagger, а не в Vaadin Router
+        // Instruct Spring Security to fully ignore these paths
+        // Requests bypass Vaadin Router and go directly to Swagger endpoints
         web.ignoring().requestMatchers(
                 "/swagger-ui/**",
                 "/v3/api-docs/**"

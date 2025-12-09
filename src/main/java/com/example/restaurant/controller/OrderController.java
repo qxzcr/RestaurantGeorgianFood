@@ -62,6 +62,5 @@ public class OrderController {
         );
     }
 
-    // Внутренний класс для JSON ответа
     public record DashboardStats(java.math.BigDecimal revenue, long ordersCount, String topDish) {}
 }

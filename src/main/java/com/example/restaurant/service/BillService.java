@@ -26,54 +26,50 @@ public class BillService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        // Логика расчета суммы (в реальном приложении замените на order.getTotalPrice())
+        // Calculate total amount (replace with order.getTotalPrice() in real app)
         double total = 100.0;
-        // Или если хотите использовать реальную сумму:
-        // double total = order.getTotalPrice().doubleValue();
-
         Bill bill = Bill.builder()
                 .order(order)
                 .totalAmount(total)
                 .paidAmount(0.0)
                 .status(PaymentStatus.PENDING)
                 .createdAt(LocalDateTime.now())
-                // .payments(new ArrayList<>()) // Убираем, если это поле вызывает проблемы, или оставляем пустым
                 .build();
 
         return billRepository.save(bill);
     }
-
+    // Process a payment for a bill
     @Transactional
     public Bill processPayment(Long billId, double amount, PaymentMethod method) {
+        // Fetch bill by ID
         Bill bill = billRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("Bill not found"));
 
+        // Prevent paying an already paid bill
         if (bill.getStatus() == PaymentStatus.PAID) {
             throw new IllegalStateException("Bill is already paid");
         }
 
-        // --- ИСПРАВЛЕНИЕ ОШИБКИ ---
-        // Payment теперь привязан к Order, а не к Bill.
-        // Мы берем заказ из счета: bill.getOrder()
+        // Payment is now linked to Order instead of Bill ---
         Payment payment = Payment.builder()
-                .order(bill.getOrder())         // Исправлено: .bill(bill) -> .order(...)
-                .amount(BigDecimal.valueOf(amount)) // Исправлено: double -> BigDecimal
+                .order(bill.getOrder())
+                .amount(BigDecimal.valueOf(amount))
                 .method(method)
                 .timestamp(LocalDateTime.now())
                 .build();
 
+        // Save payment record
         paymentRepository.save(payment);
 
-        // Обновляем статус счета
+        // Update paid amount on the bill
         double newPaidAmount = bill.getPaidAmount() + amount;
         bill.setPaidAmount(newPaidAmount);
 
-        // Проверяем, полностью ли оплачено (с небольшой погрешностью для double)
+        // Check if the bill is fully paid (with small tolerance for double)
         if (newPaidAmount >= bill.getTotalAmount() - 0.01) {
             bill.setStatus(PaymentStatus.PAID);
 
-            // Закрываем заказ
-            bill.getOrder().setStatus(OrderStatus.CLOSED); // Теперь CLOSED существует
+            bill.getOrder().setStatus(OrderStatus.CLOSED);
             orderRepository.save(bill.getOrder());
         } else {
             bill.setStatus(PaymentStatus.PARTIALLY_PAID);
@@ -82,6 +78,7 @@ public class BillService {
         return billRepository.save(bill);
     }
 
+    // Fetch a bill by its associated order ID
     public Bill getBillByOrderId(Long orderId) {
         return billRepository.findByOrderId(orderId).orElse(null);
     }

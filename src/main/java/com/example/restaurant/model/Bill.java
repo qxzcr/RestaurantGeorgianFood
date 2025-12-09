@@ -28,7 +28,4 @@ public class Bill {
 
     private LocalDateTime createdAt;
 
-    // --- DELETED: private List<Payment> payments; ---
-    // Why? Because Payment is now linked to Order, not Bill.
-    // If you need payments, use: bill.getOrder().getPayments()
 }

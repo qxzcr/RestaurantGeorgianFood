@@ -19,26 +19,17 @@ public class SupplyService {
     private final InventoryLogRepository inventoryLogRepository;
     private final IngredientRepository ingredientRepository;
 
-    // --- Suppliers ---
     public List<Supplier> findAllSuppliers() { return supplierRepository.findAll(); }
-
     public Supplier saveSupplier(Supplier supplier) { return supplierRepository.save(supplier); }
-
-    @Transactional
-    public Supplier updateSupplier(Long id, Supplier updatedInfo) {
-        Supplier supplier = supplierRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Supplier not found"));
-        supplier.setName(updatedInfo.getName());
-        supplier.setEmail(updatedInfo.getEmail());
-        supplier.setPhone(updatedInfo.getPhone());
-        return supplierRepository.save(supplier);
+    public void deleteSupplier(Long id) { supplierRepository.deleteById(id); } // Добавлен метод для Controller/View
+    public Supplier updateSupplier(Long id, Supplier updated) { // Метод для update
+        Supplier s = supplierRepository.findById(id).orElseThrow();
+        s.setName(updated.getName());
+        s.setEmail(updated.getEmail());
+        s.setPhone(updated.getPhone());
+        return supplierRepository.save(s);
     }
 
-    public void deleteSupplier(Long id) {
-        supplierRepository.deleteById(id);
-    }
-
-    // --- Orders ---
     public List<SupplyOrder> findAllOrders() { return supplyOrderRepository.findAll(); }
 
     @Transactional
@@ -53,9 +44,30 @@ public class SupplyService {
         return supplyOrderRepository.save(order);
     }
 
-    public void deleteOrder(Long id) {
-        supplyOrderRepository.deleteById(id);
+    // --- НОВЫЙ МЕТОД: Отправить заказ поставщику ---
+    @Transactional
+    public void sendOrder(Long orderId) {
+        SupplyOrder order = supplyOrderRepository.findById(orderId).orElseThrow();
+        if (order.getStatus() == SupplyStatus.CREATED) {
+            order.setStatus(SupplyStatus.SENT);
+            supplyOrderRepository.save(order);
+            // Здесь можно добавить логику отправки Email
+            System.out.println(">>> Email sent to: " + order.getSupplier().getEmail());
+        }
     }
+
+    // --- НОВЫЙ МЕТОД: Отменить заказ ---
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        SupplyOrder order = supplyOrderRepository.findById(orderId).orElseThrow();
+        if (order.getStatus() != SupplyStatus.RECEIVED) {
+            order.setStatus(SupplyStatus.CANCELLED);
+            supplyOrderRepository.save(order);
+        }
+    }
+
+    @Transactional
+    public void deleteOrder(Long id) { supplyOrderRepository.deleteById(id); }
 
     @Transactional
     public void markReceived(Long orderId) {
@@ -63,16 +75,13 @@ public class SupplyService {
 
         if (order.getStatus() == SupplyStatus.RECEIVED) return;
 
-        // 1. Обновляем статус
         order.setStatus(SupplyStatus.RECEIVED);
         supplyOrderRepository.save(order);
 
-        // 2. Пополняем склад
         Ingredient ingredient = order.getIngredient();
         ingredient.setCurrentStock(ingredient.getCurrentStock() + order.getQuantity());
         ingredientRepository.save(ingredient);
 
-        // 3. Пишем лог
         InventoryLog log = InventoryLog.builder()
                 .ingredient(ingredient)
                 .changeAmount(order.getQuantity())

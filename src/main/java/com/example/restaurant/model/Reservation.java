@@ -144,10 +144,8 @@ public class Reservation {
     private LocalTime reservationTime;
     private int guestCount;
 
-    // (НОВОЕ!) Номер стола (назначается автоматически)
     private Integer tableNumber;
 
-    // (НОВОЕ!) Связь с заказом (один к одному)
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

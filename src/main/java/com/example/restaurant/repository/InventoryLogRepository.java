@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface InventoryLogRepository extends JpaRepository<InventoryLog, Long> {
 
-    // Spring автоматически реализует этот метод на основе названия
     List<InventoryLog> findAllByOrderByTimestampDesc();
 }

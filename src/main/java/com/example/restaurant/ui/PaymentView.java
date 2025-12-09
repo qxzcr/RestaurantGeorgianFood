@@ -24,6 +24,10 @@ import jakarta.annotation.security.RolesAllowed;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * View for managing billing and payments.
+ * Shows active orders, allows processing payments, and displays payment history.
+ */
 @Route(value = "payments", layout = MainLayout.class)
 @PageTitle("Billing & Payments | Kinto")
 @RolesAllowed({"ADMIN", "WAITER"})
@@ -43,7 +47,7 @@ public class PaymentView extends VerticalLayout {
 
         setSizeFull();
 
-        // --- ВЕРХНЯЯ ЧАСТЬ: АКТИВНЫЕ ЗАКАЗЫ ---
+        // --- Top Section: Active Orders ---
         add(new H1("Active Orders"));
 
         activeOrdersGrid = new Grid<>(Order.class, false);
@@ -68,7 +72,7 @@ public class PaymentView extends VerticalLayout {
 
         add(activeOrdersGrid);
 
-        // --- НИЖНЯЯ ЧАСТЬ: ИСТОРИЯ ПЛАТЕЖЕЙ ---
+        // --- Bottom Section: Recent Payments History ---
         add(new H2("Recent Payments History"));
 
         historyGrid = new Grid<>(Payment.class, false);

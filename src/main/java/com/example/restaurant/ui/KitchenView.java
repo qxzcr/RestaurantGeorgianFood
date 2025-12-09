@@ -48,18 +48,24 @@ public class KitchenView extends VerticalLayout {
         refreshOrders();
     }
 
+    /**
+     * Refreshes the list of active orders currently being prepared.
+     * Filters only orders with status PREPARING.
+     */
     private void refreshOrders() {
         ordersContainer.removeAll();
 
-        // ИСПРАВЛЕНИЕ: Используем правильное имя метода findActiveOrders()
         List<Order> orders = orderService.findActiveOrders();
 
-        // Фильтруем только те, что готовятся (PREPARING)
         orders.stream()
                 .filter(o -> o.getStatus() == OrderStatus.PREPARING)
                 .forEach(order -> ordersContainer.add(createTicket(order)));
     }
-
+    /**
+     * Creates a single order ticket for the KDS.
+     * @param order the order to display
+     * @return a VerticalLayout representing the ticket
+     */
     private VerticalLayout createTicket(Order order) {
         VerticalLayout ticket = new VerticalLayout();
         ticket.addClassName("kitchen-ticket");
@@ -71,11 +77,12 @@ public class KitchenView extends VerticalLayout {
 
         H3 tableHeader = new H3("Table " + order.getTableNumber());
 
-        // Добавлена проверка на null, чтобы не было ошибок
+        // Display order creation time
         String timeStr = order.getCreatedAt() != null ?
                 order.getCreatedAt().format(DateTimeFormatter.ofPattern("HH:mm")) : "N/A";
         Span timeSpan = new Span("Time: " + timeStr);
 
+        // List of order items
         VerticalLayout itemsLayout = new VerticalLayout();
         itemsLayout.setSpacing(false);
 
@@ -86,11 +93,11 @@ public class KitchenView extends VerticalLayout {
             itemsLayout.add(itemSpan);
         }
 
-        // Кнопка "Готово"
+        // "MARK READY" button to update order status
         Button readyBtn = new Button("MARK READY", e -> {
             order.setStatus(OrderStatus.READY);
             orderService.saveOrder(order);
-            refreshOrders(); // Обновить экран
+            refreshOrders();
         });
         readyBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         readyBtn.setWidthFull();

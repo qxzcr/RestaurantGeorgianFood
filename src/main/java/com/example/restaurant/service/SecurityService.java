@@ -71,22 +71,22 @@ public class SecurityService {
      * Performs user logout.
      */
     public void logout() {
-        // 1. Чётко и полностью очищаем контекст авторизации
+        // 1. Clear the current SecurityContext
         SecurityContextHolder.clearContext();
 
-        // 2. Сохраняем пустой SecurityContext в хранилище (ВАЖНО!)
+        // 2. Save an empty SecurityContext to the repository
         SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
         VaadinServletRequest req = (VaadinServletRequest) VaadinService.getCurrentRequest();
         VaadinServletResponse resp = (VaadinServletResponse) VaadinService.getCurrentResponse();
         securityContextRepository.saveContext(emptyContext, req.getHttpServletRequest(), resp.getHttpServletResponse());
 
-        // 3. Закрываем Vaadin session (обязательно после очистки контекста)
+        // 3. Close the current Vaadin session
         UI.getCurrent().getSession().close();
 
-        // 4. Удаляем JWT токен (если он у тебя используется на клиенте)
+        // 4. Remove JWT token from client-side storage (if applicable)
         UI.getCurrent().getPage().executeJs("localStorage.removeItem('token');");
 
-        // 5. И наконец — отправляем на главную
+        // 5. Redirect to home page
         UI.getCurrent().getPage().setLocation("/");
     }
 

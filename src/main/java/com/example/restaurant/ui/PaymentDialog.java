@@ -16,6 +16,10 @@ import com.vaadin.flow.component.textfield.BigDecimalField;
 
 import java.math.BigDecimal;
 
+/**
+ * Dialog for processing payments for a specific table/order.
+ * Shows total, paid, remaining amounts and allows the user to select payment method and enter amount.
+ */
 public class PaymentDialog extends Dialog {
 
     public PaymentDialog(Order order, PaymentService paymentService, Runnable onPaymentSuccess) {
@@ -23,7 +27,7 @@ public class PaymentDialog extends Dialog {
 
         VerticalLayout layout = new VerticalLayout();
 
-        // Информация о суммах
+        // --- Display order amounts ---
         BigDecimal total = order.getTotalPrice();
         BigDecimal paid = order.getPaidAmount();
         BigDecimal remaining = order.getRemainingAmount();
@@ -35,18 +39,18 @@ public class PaymentDialog extends Dialog {
         remainText.getStyle().set("color", "red").set("font-weight", "bold");
         layout.add(remainText);
 
-        // Поле ввода суммы (по умолчанию - остаток)
+        // --- Input field for payment amount ---
         BigDecimalField amountField = new BigDecimalField("Amount to Pay");
         amountField.setValue(remaining);
         amountField.setWidthFull();
 
-        // Выбор метода
+        // --- Dropdown to select payment method ---
         ComboBox<PaymentMethod> methodField = new ComboBox<>("Method");
         methodField.setItems(PaymentMethod.values());
         methodField.setValue(PaymentMethod.CARD);
         methodField.setWidthFull();
 
-        // Кнопка оплаты
+        // --- Pay button ---
         Button payBtn = new Button("Pay", e -> {
             try {
                 BigDecimal amount = amountField.getValue();

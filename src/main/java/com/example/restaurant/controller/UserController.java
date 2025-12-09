@@ -22,12 +22,14 @@ public class UserController {
     @GetMapping
     @Operation(summary = "Get all users")
     public List<User> getAllUsers() {
+        // Return every user stored in the system
         return userService.findAllUsers();
     }
 
     @GetMapping("/{email}")
     @Operation(summary = "Find user by Email")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        // Return user if found, otherwise return 404
         return Optional.ofNullable(userService.findByEmail(email))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -36,8 +38,9 @@ public class UserController {
     @PutMapping("/{id}")
     @Operation(summary = "Update user")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        // Ensure request body uses the correct user ID
         userDetails.setId(id);
-        // Используем метод saveUser, который умеет хешировать пароль
+        // Use saveUser() which already handles password hashing
         User updatedUser = userService.saveUser(userDetails, userDetails.getPassword());
         return ResponseEntity.ok(updatedUser);
     }

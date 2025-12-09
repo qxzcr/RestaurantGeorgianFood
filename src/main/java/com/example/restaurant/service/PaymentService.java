@@ -20,15 +20,18 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderService orderService;
 
-    // --- НОВЫЕ МЕТОДЫ ДЛЯ ИСТОРИИ ---
+
+    // --- METHODS FOR PAYMENT HISTORY ---
+    // Retrieve all payments sorted from newest to oldest
     public List<Payment> getAllPayments() {
         return paymentRepository.findAllByOrderByTimestampDesc();
     }
 
+    // Retrieve all payments for a specific order
     public List<Payment> getPaymentsForOrder(Long orderId) {
         return paymentRepository.findByOrderId(orderId);
     }
-    // --------------------------------
+    // --- PROCESS A PAYMENT ---
 
     @Transactional
     public void pay(Long orderId, BigDecimal amount, PaymentMethod method) {
@@ -37,11 +40,12 @@ public class PaymentService {
 
         BigDecimal remaining = order.getRemainingAmount();
 
-        // Небольшая защита от переплаты (можно убрать, если хотите разрешить чаевые)
+        // Simple overpayment protection (optional, can allow tips)
         if (amount.compareTo(remaining) > 0) {
             // throw new RuntimeException("Amount exceeds remaining balance!");
-            // В реальной жизни часто разрешают платить больше (чаевые), поэтому я закомментировал ошибку
+            // Commented out to allow overpayment/tips
         }
+        // Create new payment record
 
         Payment payment = Payment.builder()
                 .order(order)
@@ -52,10 +56,10 @@ public class PaymentService {
 
         paymentRepository.save(payment);
 
-        // Обновляем список в объекте order, чтобы UI сразу увидел изменения
+        // Update the order's payment list so UI sees changes immediately
         order.getPayments().add(payment);
 
-        // Если долг <= 0, меняем статус заказа на PAID
+        // If the remaining amount is zero or less, mark order as PAID
         if (order.getRemainingAmount().compareTo(BigDecimal.ZERO) <= 0) {
             order.setStatus(OrderStatus.PAID);
             orderService.saveOrder(order);

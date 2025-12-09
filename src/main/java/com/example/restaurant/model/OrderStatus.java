@@ -2,10 +2,10 @@ package com.example.restaurant.model;
 
 public enum OrderStatus {
     CREATED,
-    PREPARING, // <--- You were missing this
+    PREPARING,
     READY,
     SERVED,
-    PAID,      // <--- Needed for Payment logic
-    CLOSED,    // <--- Needed for Bill logic
+    PAID,
+    CLOSED,
     CANCELLED
 }
