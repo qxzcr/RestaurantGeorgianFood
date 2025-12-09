@@ -13,9 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ModelUnitTest {
 
-    // --- ORDER TESTS ---
+    // 1. Verify total price calculation for an Order
     @Test
-    @DisplayName("Order: Should calculate total price correctly")
     void order_ShouldCalculateTotal() {
         Dish d1 = Dish.builder().price(new BigDecimal("10.00")).build();
         Dish d2 = Dish.builder().price(new BigDecimal("5.00")).build();
@@ -28,16 +27,15 @@ class ModelUnitTest {
         assertThat(order.getTotalPrice()).isEqualByComparingTo(new BigDecimal("25.00"));
     }
 
+    // 2. Verify empty order returns zero
     @Test
-    @DisplayName("Order: Total should be zero for empty order")
     void order_ShouldReturnZeroIfEmpty() {
         Order order = new Order();
         assertThat(order.getTotalPrice()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
-    // --- USER TESTS ---
+    // 3. Verify Spring Security Role Mapping
     @Test
-    @DisplayName("User: Should return correct Spring Security authority")
     void user_ShouldReturnCorrectAuthority() {
         User user = User.builder().role(Role.ADMIN).build();
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
@@ -46,19 +44,35 @@ class ModelUnitTest {
         assertThat(authorities.iterator().next().getAuthority()).isEqualTo("ROLE_ADMIN");
     }
 
+    // 4. Verify default account status (Enabled/NonExpired)
     @Test
-    @DisplayName("User: Account should be enabled by default")
     void user_ShouldBeEnabledByDefault() {
         User user = new User();
         assertThat(user.isEnabled()).isTrue();
         assertThat(user.isAccountNonExpired()).isTrue();
     }
 
-    // --- BUILDER TESTS ---
+    // 5. Verify Dish Builder
     @Test
     void dish_BuilderCheck() {
         Dish dish = Dish.builder().name("Khinkali").price(BigDecimal.TEN).category(DishCategory.MAIN_COURSE).build();
         assertThat(dish.getName()).isEqualTo("Khinkali");
         assertThat(dish.getCategory()).isEqualTo(DishCategory.MAIN_COURSE);
+    }
+
+    // 6. Verify Reservation Builder
+    @Test
+    void reservation_BuilderCheck() {
+        Reservation res = Reservation.builder().guestCount(5).tableNumber(10).build();
+        assertThat(res.getGuestCount()).isEqualTo(5);
+        assertThat(res.getTableNumber()).isEqualTo(10);
+    }
+
+    // 7. Verify Attendance Record creation
+    @Test
+    void attendance_BuilderCheck() {
+        AttendanceRecord record = AttendanceRecord.builder().clockInTime(java.time.LocalDateTime.now()).build();
+        assertThat(record.getClockInTime()).isNotNull();
+        assertThat(record.getClockOutTime()).isNull();
     }
 }

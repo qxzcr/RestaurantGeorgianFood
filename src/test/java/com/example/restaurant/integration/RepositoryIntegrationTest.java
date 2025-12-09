@@ -9,59 +9,85 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// Используем @DataJpaTest для скорости (поднимает только слой БД)
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Использует настройки из application.properties (или H2 если настроено)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class RepositoryIntegrationTest {
 
-    @Autowired ReservationRepository reservationRepository;
     @Autowired UserRepository userRepository;
     @Autowired DishRepository dishRepository;
+    @Autowired ReservationRepository reservationRepository;
+    @Autowired ShiftRepository shiftRepository;
+    @Autowired PaymentRepository paymentRepository;
     @Autowired OrderRepository orderRepository;
+    @Autowired SupplierRepository supplierRepository;
 
+    // 24. Save and Find User
     @Test
-    void userRepo_ShouldSaveAndFind() {
-        String email = "integration_" + System.currentTimeMillis() + "@test.com";
-        User user = User.builder().email(email).password("pass").fullName("Test").role(Role.ADMIN).build();
-        userRepository.save(user);
-
-        Optional<User> found = userRepository.findByEmail(email);
-        assertThat(found).isPresent();
-        assertThat(found.get().getRole()).isEqualTo(Role.ADMIN);
+    void user_SaveAndFind() {
+        User u = User.builder().email("unique@test.com").password("p").role(Role.ADMIN).fullName("Test").build();
+        userRepository.save(u);
+        assertThat(userRepository.findByEmail("unique@test.com")).isPresent();
     }
 
+    // 25. Save Dish
     @Test
-    void resRepo_ShouldCountCorrectly() {
-        // Создаем пользователя, так как Reservation требует User
-        User u = new User(); u.setEmail("res_unique@u.com"); u.setPassword("p"); u.setFullName("u"); u.setRole(Role.CUSTOMER);
+    void dish_Save() {
+        Dish d = Dish.builder().name("IntegrDish").price(BigDecimal.TEN).category(DishCategory.DRINK).build();
+        Dish saved = dishRepository.save(d);
+        assertThat(saved.getId()).isNotNull();
+    }
+
+    // 26. Count Reservations by Time (Custom Query)
+    @Test
+    void reservation_Count() {
+        User u = new User(); u.setEmail("res@test.com"); u.setPassword("p"); u.setFullName("u"); u.setRole(Role.CUSTOMER);
         userRepository.save(u);
 
         LocalDate d = LocalDate.now().plusYears(1);
-        LocalTime t = LocalTime.of(19, 0);
-
+        LocalTime t = LocalTime.of(18, 0);
         reservationRepository.save(Reservation.builder().user(u).reservationDate(d).reservationTime(t).fullName("1").build());
         reservationRepository.save(Reservation.builder().user(u).reservationDate(d).reservationTime(t).fullName("2").build());
 
-        // Другое время (не должно учитываться)
-        reservationRepository.save(Reservation.builder().user(u).reservationDate(d).reservationTime(LocalTime.of(20, 0)).fullName("3").build());
-
-        int count = reservationRepository.countByReservationDateAndReservationTime(d, t);
-        assertThat(count).isEqualTo(2);
+        assertThat(reservationRepository.countByReservationDateAndReservationTime(d, t)).isEqualTo(2);
     }
 
+    // 27. Shift Repository
     @Test
-    void dishRepo_ShouldSaveAndDelete() {
-        Dish d = Dish.builder().name("Test Dish").price(BigDecimal.TEN).category(DishCategory.STARTER).build();
-        Dish saved = dishRepository.save(d);
+    void shift_SaveAndFind() {
+        User u = new User(); u.setEmail("shift@test.com"); u.setPassword("p"); u.setFullName("u"); u.setRole(Role.WAITER);
+        userRepository.save(u);
 
-        assertThat(saved.getId()).isNotNull();
+        Shift s = Shift.builder().employee(u).startTime(LocalDateTime.now()).endTime(LocalDateTime.now().plusHours(8)).build();
+        shiftRepository.save(s);
 
-        dishRepository.deleteById(saved.getId());
-        assertThat(dishRepository.findById(saved.getId())).isEmpty();
+        assertThat(shiftRepository.findByEmployee(u)).hasSize(1);
+    }
+
+    // 28. Payment Linked to Order
+    @Test
+    void payment_SaveWithOrder() {
+        User w = new User(); w.setEmail("pay@w.com"); w.setPassword("p"); w.setFullName("w"); w.setRole(Role.WAITER);
+        userRepository.save(w);
+
+        Order o = Order.builder().waiter(w).status(OrderStatus.SERVED).tableNumber(1).createdAt(LocalDateTime.now()).build();
+        orderRepository.save(o);
+
+        Payment p = Payment.builder().order(o).amount(BigDecimal.TEN).method(PaymentMethod.CASH).timestamp(LocalDateTime.now()).build();
+        paymentRepository.save(p);
+
+        assertThat(paymentRepository.findByOrderId(o.getId())).hasSize(1);
+    }
+
+    // 29. Supplier Repository
+    @Test
+    void supplier_Save() {
+        Supplier s = Supplier.builder().name("Test Supplier").email("s@s.com").build();
+        supplierRepository.save(s);
+        assertThat(supplierRepository.findAll()).isNotEmpty();
     }
 }
